@@ -1,6 +1,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include "defs.h"
 #include <QMainWindow>
 
 QT_BEGIN_NAMESPACE
@@ -17,5 +18,18 @@ public:
 
 private:
     Ui::MainWindow *ui;
+    int curr = 0;
+
+private slots:
+  void upButtonPressed();
+  void downButtonPressed();
+  void leftButtonPressed();
+  void rightButtonPressed();
+  void backButtonPressed();
+  void powerButtonPressed();
+  void menuButtonPressed();
+  void selectorButtonPressed();
+  void coherencePressed();
+
 };
 #endif // MAINWINDOW_H
