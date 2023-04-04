@@ -23,6 +23,8 @@ private:
 
     Menu *currMenu;
 
+    void setUpMenus();
+
 private slots:
   void upButtonPressed();
   void downButtonPressed();

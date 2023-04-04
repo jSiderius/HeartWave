@@ -12,19 +12,25 @@ class Menu
       void select(direction);
 
       QString getName(){ return name; }
+      void setParent(Menu*);
+      Menu* click();
+      Menu* back();
+      Menu* mainMenu();
 
 
   private:
     void setColor(QWidget*, QColor);
     void renderButtons();
+    void derender();
 
-    Menu *parent;
+    Menu *parentMenu = NULL;
     Menu **subMenus;
 
-    QPushButton *buttons[3];
+    QPushButton *buttons[NUM_BUTTONS];
 
     int numMenus;
-    int selected;
+    int menuSelected;
+    int buttonSelected;
 
     QString name;
 

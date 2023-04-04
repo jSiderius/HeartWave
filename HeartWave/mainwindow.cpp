@@ -36,9 +36,13 @@ MainWindow::MainWindow(QWidget *parent)
     ui->selectorButton->setStyleSheet("QPushButton { border-radius: 15px; background-color: rgb(0,0,0); }");
 
 
-    Menu *arr[5];
+    Menu **arr = new Menu*[5];
+    Menu **subArr = new Menu*[2];
+    subArr[0] = new Menu("Sub Menu 1", NULL, 0, ui->menuFrame);
+    subArr[1] = new Menu("Sub Menu 2", NULL, 0, ui->menuFrame);
 
-    arr[0] = new Menu("Menu 1", NULL, 0, ui->menuFrame);
+    arr[0] = new Menu("Menu 1", subArr, 2, ui->menuFrame);
+    // arr[0] = new Menu("Menu 1", NULL, 0, ui->menuFrame);
     arr[1] = new Menu("Menu 2", NULL, 0, ui->menuFrame);
     arr[2] = new Menu("Menu 3", NULL, 0, ui->menuFrame);
     arr[3] = new Menu("Menu 4", NULL, 0, ui->menuFrame);
@@ -49,41 +53,36 @@ MainWindow::MainWindow(QWidget *parent)
 }
 
 void MainWindow::upButtonPressed(){
-  qDebug()<<"Up Button Pressed";
   currMenu->select(UP);
 }
 
 void MainWindow::downButtonPressed(){
-  qDebug()<<"Down Button Pressed";
   currMenu->select(DOWN);
 }
 
 void MainWindow::leftButtonPressed(){
-  qDebug()<<"Left Button Pressed";
 }
 
 void MainWindow::rightButtonPressed(){
-  qDebug()<<"Right Button Pressed";
 }
 
 void MainWindow::backButtonPressed(){
-  qDebug()<<"Back Button Pressed";
+  currMenu = currMenu->back();
+  qDebug()<<currMenu->getName();
 }
 
 void MainWindow::powerButtonPressed(){
-  qDebug()<<"Power Button Pressed";
 }
 
 void MainWindow::menuButtonPressed(){
-  qDebug()<<"Menu Button Pressed";
+  currMenu = currMenu->mainMenu();
 }
 
 void MainWindow::selectorButtonPressed(){
-  qDebug()<<"Selector Button Pressed";
+  currMenu = currMenu->click();
 }
 
 void MainWindow::coherencePressed(){
-  qDebug()<<"Coherence Pressed";
   if(++curr%3 == 0){
     ui->coherence->setStyleSheet("background-color: red");
   }else if(curr%3==1){

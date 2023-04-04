@@ -1,43 +1,54 @@
 #include "menu.h"
 
-Menu::Menu(std::string name, Menu **arr, int arrSize, QWidget *parent) : numMenus(arrSize), subMenus(arr), name(QString::fromStdString(name))
+Menu::Menu(std::string n, Menu **arr, int arrSize, QWidget *parent) : numMenus(arrSize), subMenus(arr), name(QString::fromStdString(n))
 {
-  selected = 0;
-  buttons[0] = new QPushButton(parent);
-  buttons[1] = new QPushButton(parent);
-  buttons[2] = new QPushButton(parent);
+  buttonSelected = 0;
+  menuSelected = 0;
 
-  for(int i = 0; i < numMenus; i++){
-    qDebug()<<(subMenus[i]->getName());
+  for(int i = 0; i < NUM_BUTTONS; i++){
+    buttons[i] = new QPushButton(parent);
+    buttons[i]->setGeometry(0, i * 192/NUM_BUTTONS, 451, 192/NUM_BUTTONS);
   }
-
+  for(int i = 0; i < numMenus; i++){
+    subMenus[i]->setParent(this);
+  }
+  renderButtons();
+  select(UP);
 }
 
 void Menu::select(direction dir){
-      setColor(buttons[selected], QColor(238,238,238,255));
+      setColor(buttons[buttonSelected], QColor(238,238,238,255));
 
-      if(dir == UP && selected != 0){
-        selected--;//counter intuitive but menu 0 is at the top
-      }else if(dir == DOWN && selected != 2){//MIGHT NEED A FIX TO CORRESPOND TO MENUS
-        selected++;
+      if(dir == UP && menuSelected != 0){
+        menuSelected--;
+        if(buttonSelected != 0) buttonSelected--;
+      }else if(dir == DOWN && menuSelected != numMenus - 1){
+        menuSelected++;
+        if(buttonSelected != NUM_BUTTONS-1) buttonSelected++;
       }
 
-      setColor(buttons[selected], QColor(255,196,0,255));
+      setColor(buttons[buttonSelected], QColor(255,196,0,255));
       renderButtons();
 }
 
 void Menu::renderButtons(){
-  qDebug()<<"Rendering Buttons for "<<name;
-  for(int i = 0; i < 3; i++){
+  int start = menuSelected - buttonSelected;
 
-    if(numMenus < i)  break;
-    buttons[i]->setGeometry(0, i * 64, 451, 64);
-    // qDebug()<<i<<subMenus[0]->getName();
-    // buttons[i]->setText(subMenus[i+selected]->getName());
+  for(int i = start; i < start+NUM_BUTTONS; i++){
+
+    if(numMenus <= i){
+      buttons[i-start]->hide(); //setText("");
+      continue;
+    }
+    qDebug()<<name<<" start: "<<start<<" i: "<<i;
+    buttons[i-start]->setText(subMenus[i]->getName());
+    buttons[i-start]->show();
   }
+}
 
-  for(int i = 0; i < numMenus; i++){
-    // qDebug()<<subMenus[i]->getName();
+void Menu::derender(){
+  for(int i = 0; i < NUM_BUTTONS; i++){
+    buttons[i]->hide();
   }
 }
 
@@ -45,4 +56,32 @@ void Menu::setColor(QWidget* widget, QColor col){
   QPalette pal = widget->palette();
   pal.setColor(QPalette::Button, col);
   widget->setPalette(pal);
+}
+
+void Menu::setParent(Menu* p){
+  parentMenu = p;
+  derender();
+}
+
+Menu* Menu::click(){
+  derender();
+  subMenus[menuSelected]->renderButtons();
+  return subMenus[menuSelected];
+}
+
+Menu* Menu::back(){
+  if(parentMenu == NULL) return this;
+  derender();
+  parentMenu->renderButtons();
+  return parentMenu;
+}
+
+Menu* Menu::mainMenu(){
+
+  if(parentMenu == NULL){
+    renderButtons();
+    return this;
+  }
+  derender();
+  return parentMenu->mainMenu();
 }

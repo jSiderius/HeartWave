@@ -9,6 +9,7 @@
 #include <QPushButton>
 
 #define MAX_ARR 256
+#define NUM_BUTTONS 4
 
 
 enum direction {UP, DOWN};
