@@ -29,13 +29,13 @@
     <property name="frameShadow">
      <enum>QFrame::Raised</enum>
     </property>
-    <widget class="QFrame" name="frame_2">
+    <widget class="QFrame" name="menuFrame">
      <property name="geometry">
       <rect>
        <x>40</x>
        <y>90</y>
        <width>451</width>
-       <height>191</height>
+       <height>192</height>
       </rect>
      </property>
      <property name="frameShape">

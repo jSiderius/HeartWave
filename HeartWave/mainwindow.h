@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include "defs.h"
+#include "menu.h"
 #include <QMainWindow>
 
 QT_BEGIN_NAMESPACE
@@ -19,6 +20,8 @@ public:
 private:
     Ui::MainWindow *ui;
     int curr = 0;
+
+    Menu *currMenu;
 
 private slots:
   void upButtonPressed();

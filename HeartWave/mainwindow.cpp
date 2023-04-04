@@ -34,14 +34,28 @@ MainWindow::MainWindow(QWidget *parent)
     ui->menuButton->setIconSize(QSize(32,32));
 
     ui->selectorButton->setStyleSheet("QPushButton { border-radius: 15px; background-color: rgb(0,0,0); }");
+
+
+    Menu *arr[5];
+
+    arr[0] = new Menu("Menu 1", NULL, 0, ui->menuFrame);
+    arr[1] = new Menu("Menu 2", NULL, 0, ui->menuFrame);
+    arr[2] = new Menu("Menu 3", NULL, 0, ui->menuFrame);
+    arr[3] = new Menu("Menu 4", NULL, 0, ui->menuFrame);
+    arr[4] = new Menu("Menu 5", NULL, 0, ui->menuFrame);
+
+    currMenu = new Menu("Main Menu", arr, 5, ui->menuFrame);
+
 }
 
 void MainWindow::upButtonPressed(){
   qDebug()<<"Up Button Pressed";
+  currMenu->select(UP);
 }
 
 void MainWindow::downButtonPressed(){
   qDebug()<<"Down Button Pressed";
+  currMenu->select(DOWN);
 }
 
 void MainWindow::leftButtonPressed(){
