@@ -2,37 +2,31 @@
 #define MENU_H
 
 #include "defs.h"
+#include "page.h"
 
-class Menu
+class Menu : public Page
 {
 
   public:
-      Menu(std::string, Menu**, int, QWidget*);
-
-      void select(direction);
-
-      QString getName(){ return name; }
-      void setParent(Menu*);
-      Menu* click();
-      Menu* back();
-      Menu* mainMenu();
+      Menu(std::string, Page**, int, QWidget*);
 
 
   private:
     void setColor(QWidget*, QColor);
-    void renderButtons();
-    void derender();
+    Page* click(); 
+    void  derender();
+    void  render();
+    void  select(direction dir);
 
-    Menu *parentMenu = NULL;
-    Menu **subMenus;
+    Page **subPages;
 
     QPushButton *buttons[NUM_BUTTONS];
 
-    int numMenus;
-    int menuSelected;
+    int numPages;
+    int pageSelected;
     int buttonSelected;
 
-    QString name;
+
 
 };
 

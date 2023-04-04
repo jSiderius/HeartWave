@@ -21,9 +21,10 @@ private:
     Ui::MainWindow *ui;
     int curr = 0;
 
-    Menu *currMenu;
+    Page *currPage;
 
-    void setUpMenus();
+    void initGUI();
+    void initPages();
 
 private slots:
   void upButtonPressed();

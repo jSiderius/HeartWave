@@ -1,47 +1,46 @@
 #include "menu.h"
 
-Menu::Menu(std::string n, Menu **arr, int arrSize, QWidget *parent) : numMenus(arrSize), subMenus(arr), name(QString::fromStdString(n))
+Menu::Menu(std::string n, Page **arr, int arrSize, QWidget *parent) : Page(n, parent), numPages(arrSize), subPages(arr)
 {
   buttonSelected = 0;
-  menuSelected = 0;
+  pageSelected = 0;
 
   for(int i = 0; i < NUM_BUTTONS; i++){
     buttons[i] = new QPushButton(parent);
     buttons[i]->setGeometry(0, i * 192/NUM_BUTTONS, 451, 192/NUM_BUTTONS);
   }
-  for(int i = 0; i < numMenus; i++){
-    subMenus[i]->setParent(this);
+  for(int i = 0; i < numPages; i++){
+    subPages[i]->setParent(this);
   }
-  renderButtons();
+  render();
   select(UP);
 }
 
 void Menu::select(direction dir){
       setColor(buttons[buttonSelected], QColor(238,238,238,255));
 
-      if(dir == UP && menuSelected != 0){
-        menuSelected--;
+      if(dir == UP && pageSelected != 0){
+        pageSelected--;
         if(buttonSelected != 0) buttonSelected--;
-      }else if(dir == DOWN && menuSelected != numMenus - 1){
-        menuSelected++;
+      }else if(dir == DOWN && pageSelected != numPages - 1){
+        pageSelected++;
         if(buttonSelected != NUM_BUTTONS-1) buttonSelected++;
       }
 
       setColor(buttons[buttonSelected], QColor(255,196,0,255));
-      renderButtons();
+      render();
 }
 
-void Menu::renderButtons(){
-  int start = menuSelected - buttonSelected;
+void Menu::render(){
+  int start = pageSelected - buttonSelected;
 
   for(int i = start; i < start+NUM_BUTTONS; i++){
 
-    if(numMenus <= i){
+    if(numPages <= i){
       buttons[i-start]->hide(); //setText("");
       continue;
     }
-    qDebug()<<name<<" start: "<<start<<" i: "<<i;
-    buttons[i-start]->setText(subMenus[i]->getName());
+    buttons[i-start]->setText(subPages[i]->getName());
     buttons[i-start]->show();
   }
 }
@@ -58,30 +57,9 @@ void Menu::setColor(QWidget* widget, QColor col){
   widget->setPalette(pal);
 }
 
-void Menu::setParent(Menu* p){
-  parentMenu = p;
+Page* Menu::click(){
+  if(numPages == 0) return this;
   derender();
-}
-
-Menu* Menu::click(){
-  derender();
-  subMenus[menuSelected]->renderButtons();
-  return subMenus[menuSelected];
-}
-
-Menu* Menu::back(){
-  if(parentMenu == NULL) return this;
-  derender();
-  parentMenu->renderButtons();
-  return parentMenu;
-}
-
-Menu* Menu::mainMenu(){
-
-  if(parentMenu == NULL){
-    renderButtons();
-    return this;
-  }
-  derender();
-  return parentMenu->mainMenu();
+  subPages[pageSelected]->render();
+  return subPages[pageSelected];
 }
