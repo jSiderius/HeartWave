@@ -25,3 +25,9 @@ void Page::setParent(Page* p){
   parentPage = p;
   derender();
 }
+
+void Page::setColor(QPushButton* widget, QColor col){
+  QPalette pal = widget->palette();
+  pal.setColor(QPalette::Button, col);
+  widget->setPalette(pal);
+}

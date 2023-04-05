@@ -3,6 +3,7 @@
 
 #include "defs.h"
 #include "menu.h"
+#include "session.h"
 #include <QMainWindow>
 
 QT_BEGIN_NAMESPACE
@@ -22,11 +23,14 @@ private:
     int curr = 0;
 
     Page *currPage;
+    Session *mainSession;
 
     void initGUI();
     void initPages();
 
+
 private slots:
+  void update();
   void upButtonPressed();
   void downButtonPressed();
   void leftButtonPressed();

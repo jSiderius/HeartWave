@@ -10,6 +10,11 @@ MainWindow::MainWindow(QWidget *parent)
     initGUI();
     initPages();
 
+    QTimer *timer = new QTimer(this);
+    timer->setInterval(16);
+    connect(timer, SIGNAL(timeout()), this, SLOT(update()));
+    timer->start();
+
 }
 
 void MainWindow::initGUI(){
@@ -43,19 +48,23 @@ void MainWindow::initGUI(){
 }
 
 void MainWindow::initPages(){
+  mainSession = new Session("Session", ui->menuFrame);
   Page **arr = new Page*[5];
   Page **subArr = new Page*[2];
   subArr[0] = new Menu("Sub Menu 1", NULL, 0, ui->menuFrame);
   subArr[1] = new Menu("Sub Menu 2", NULL, 0, ui->menuFrame);
 
   arr[0] = new Menu("Menu 1", subArr, 2, ui->menuFrame);
-  // arr[0] = new Menu("Menu 1", NULL, 0, ui->menuFrame);
-  arr[1] = new Menu("Menu 2", NULL, 0, ui->menuFrame);
+  arr[1] = mainSession;
   arr[2] = new Menu("Menu 3", NULL, 0, ui->menuFrame);
   arr[3] = new Menu("Menu 4", NULL, 0, ui->menuFrame);
   arr[4] = new Menu("Menu 5", NULL, 0, ui->menuFrame);
 
   currPage = new Menu("Main Menu", arr, 5, ui->menuFrame);
+}
+
+void MainWindow::update(){
+  mainSession->update();
 }
 
 void MainWindow::upButtonPressed(){

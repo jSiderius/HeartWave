@@ -12,8 +12,7 @@ class Menu : public Page
 
 
   private:
-    void setColor(QWidget*, QColor);
-    Page* click(); 
+    Page* click();
     void  derender();
     void  render();
     void  select(direction dir);

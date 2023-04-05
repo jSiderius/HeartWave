@@ -1,10 +1,14 @@
 #ifndef DEFS_H
 #define DEFS_H
 
+#include <sys/time.h>
 #include <string>
 #include <QDebug>
 #include <QLabel>
 #include <QFrame>
+#include <QBrush>
+#include <QTimer>
+#include <QPainter>
 #include <QWidget>
 #include <QPushButton>
 

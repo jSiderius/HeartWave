@@ -51,12 +51,6 @@ void Menu::derender(){
   }
 }
 
-void Menu::setColor(QWidget* widget, QColor col){
-  QPalette pal = widget->palette();
-  pal.setColor(QPalette::Button, col);
-  widget->setPalette(pal);
-}
-
 Page* Menu::click(){
   if(numPages == 0) return this;
   derender();
