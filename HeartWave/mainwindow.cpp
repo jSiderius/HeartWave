@@ -26,7 +26,7 @@ void MainWindow::initGUI(){
   connect(ui->powerButton, &QPushButton::pressed, this, &MainWindow::powerButtonPressed);
   connect(ui->menuButton, &QPushButton::pressed, this, &MainWindow::menuButtonPressed);
   connect(ui->selectorButton, &QPushButton::pressed, this, &MainWindow::selectorButtonPressed);
-  connect(ui->coherence, &QPushButton::pressed, this, &MainWindow::coherencePressed);//Probably not necessary long term
+  // connect(ui->coherence, &QPushButton::pressed, this, &MainWindow::coherencePressed);//Probably not necessary long term
 
   ui->upButton->setIcon(QIcon(":/images/upArrow.png"));
   ui->downButton->setIcon(QIcon(":/images/downArrow.png"));
@@ -97,13 +97,13 @@ void MainWindow::selectorButtonPressed(){
 }
 
 void MainWindow::coherencePressed(){
-  if(++curr%3 == 0){
-    ui->coherence->setStyleSheet("background-color: red");
-  }else if(curr%3==1){
-    ui->coherence->setStyleSheet("background-color: blue");
-  }else{
-    ui->coherence->setStyleSheet("QPushButton { background-color: green }");
-  }
+  // if(++curr%3 == 0){
+  //   ui->coherence->setStyleSheet("background-color: red");
+  // }else if(curr%3==1){
+  //   ui->coherence->setStyleSheet("background-color: blue");
+  // }else{
+  //   ui->coherence->setStyleSheet("QPushButton { background-color: green }");
+  // }
 }
 
 MainWindow::~MainWindow()

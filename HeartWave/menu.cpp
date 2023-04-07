@@ -7,7 +7,7 @@ Menu::Menu(std::string n, Page **arr, int arrSize, QWidget *parent) : Page(n, pa
 
   for(int i = 0; i < NUM_BUTTONS; i++){
     buttons[i] = new QPushButton(parent);
-    buttons[i]->setGeometry(0, i * 192/NUM_BUTTONS, 451, 192/NUM_BUTTONS);
+    buttons[i]->setGeometry(0, i * 221/NUM_BUTTONS, 451, 221/NUM_BUTTONS);
   }
   for(int i = 0; i < numPages; i++){
     subPages[i]->setParent(this);

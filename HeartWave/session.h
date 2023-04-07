@@ -3,6 +3,7 @@
 
 #include "defs.h"
 #include "page.h"
+#include "hrv.h";
 
 #define BATTERY_HEIGHT 30.0
 #define HEART_BEAT_TIME 20000000
@@ -21,13 +22,14 @@ class Session : public Page
 
       float achievementVal = 11;
       float lengthVal = 11;
-      float coherenceVal = 11;
+      float coherenceVal = 6;
 
   private:
     void initGUI(QWidget*);
 
     QPushButton *batteryEmpty;
     QPushButton *batteryFull;
+    QPushButton *coherenceIndicator;
 
     QLabel *coherence;
     QLabel *length;
@@ -37,10 +39,12 @@ class Session : public Page
     QLabel *achievementValWidget;
     QPushButton *heartBeat;
     QFrame *hrvFrame;
+    Hrv *hrv;
     QFrame *breathFrame;
 
     int bpm = 60;
     struct timeval heartBeatTimestamp;
+    struct timeval bpmUpdateTimestamp;
 
 
 };

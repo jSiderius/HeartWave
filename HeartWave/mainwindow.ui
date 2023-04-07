@@ -33,9 +33,9 @@
      <property name="geometry">
       <rect>
        <x>40</x>
-       <y>90</y>
+       <y>61</y>
        <width>451</width>
-       <height>192</height>
+       <height>221</height>
       </rect>
      </property>
      <property name="frameShape">
@@ -130,19 +130,6 @@
        <y>290</y>
        <width>51</width>
        <height>51</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="coherence">
-     <property name="geometry">
-      <rect>
-       <x>40</x>
-       <y>60</y>
-       <width>451</width>
-       <height>21</height>
       </rect>
      </property>
      <property name="text">
