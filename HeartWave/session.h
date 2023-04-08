@@ -4,9 +4,11 @@
 #include "defs.h"
 #include "page.h"
 #include "hrv.h";
+#include "breathmonitor.h"
 
 #define BATTERY_HEIGHT 30.0
 #define HEART_BEAT_TIME 20000000
+#define BREATHING_RATE 3
 
 class Session : public Page
 {
@@ -41,10 +43,14 @@ class Session : public Page
     QFrame *hrvFrame;
     Hrv *hrv;
     QFrame *breathFrame;
+    BreathMonitor *breathMonitor;
 
     int bpm = 60;
     struct timeval heartBeatTimestamp;
     struct timeval bpmUpdateTimestamp;
+    struct timeval breathTimestamp;
+    struct timeval breathTick;
+    struct timeval startTimestamp;
 
 
 };

@@ -2,6 +2,10 @@
 
 Session::Session(std::string n, QWidget* parent) : Page(n, parent){
   gettimeofday(&heartBeatTimestamp, NULL);
+  gettimeofday(&breathTimestamp, NULL);
+  gettimeofday(&bpmUpdateTimestamp, NULL);
+  gettimeofday(&breathTick, NULL);
+  gettimeofday(&startTimestamp, NULL);
   initGUI(parent);
 }
 
@@ -48,6 +52,9 @@ void Session::initGUI(QWidget *parent){
   breathFrame = new QFrame(parent);
   breathFrame->setGeometry(45.5, 190, 360, 25);
   breathFrame->setStyleSheet("border-radius: 5px; border: 1px solid black; background-color: white;");
+
+  breathMonitor = new BreathMonitor(breathFrame);
+  breathMonitor->setGeometry(5,5,350,15);
 }
 
 void Session::update(){
@@ -83,6 +90,24 @@ void Session::update(){
     hrv->addData(bpm);
   }
 
+  //UPDATE BREATH MONITOR
+  microseconds = (now.tv_sec * 1000000 + now.tv_usec) - (breathTimestamp.tv_sec * 1000000 + breathTimestamp.tv_usec);
+  long microsecondsTick = (now.tv_sec * 1000000 + now.tv_usec) - (breathTick.tv_sec * 1000000 + breathTick.tv_usec);
+  if(abs(microseconds) > BREATHING_RATE*1000000){
+    gettimeofday(&breathTimestamp, NULL);
+    breathMonitor->addData(true);
+  }else if(abs(microsecondsTick) > (1000000/2)){
+    gettimeofday(&breathTick, NULL);
+    breathMonitor->addData(false);
+  }
+
+  //UPDATE TEXT
+  float s = 1.11;
+  long minutes = (abs(now.tv_sec - startTimestamp.tv_sec) - abs(now.tv_sec - startTimestamp.tv_sec)%60)/60;
+  long seconds = abs(now.tv_sec - startTimestamp.tv_sec);
+  microseconds = abs(now.tv_usec - startTimestamp.tv_usec)/10000;
+  // qDebug()<<std::fixed<<std::setprecision(8)<<micro;
+  lengthValWidget->setText(QString::number(minutes)+QString(":")+QString::number(seconds)+QString(".")+QString::number(microseconds)); //Because QString is janky
 }
 
 Page* Session::click(){

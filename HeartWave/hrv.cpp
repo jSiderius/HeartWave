@@ -8,8 +8,8 @@ Hrv::Hrv(int bpm, QWidget *parent) : QWidget(parent), maxVal(150){
 
 void Hrv::addData(int data){
   dataArr.append(data);
-  if(dataArr.size() > 100){
-    dataArr.remove(0,dataArr.size()-100);
+  if(dataArr.size() > 80){
+    dataArr.remove(0,dataArr.size()-80);
   }
   maxVal = qMax(maxVal, data);
 
@@ -32,7 +32,7 @@ void Hrv::paintEvent(QPaintEvent *event){
     points[i].setX(i * step);
     points[i].setY((1 - (qreal)dataArr[i] / maxVal) * height());
   }
-  
+
   painter.drawPolyline(points, count);
   delete[] points;
 }
