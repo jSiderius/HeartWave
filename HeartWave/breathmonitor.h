@@ -11,6 +11,7 @@ class BreathMonitor : public QWidget
   public:
       BreathMonitor(QWidget *parent = nullptr);
       void addData(bool);
+      void reset();
 
   protected:
     void updateRender();

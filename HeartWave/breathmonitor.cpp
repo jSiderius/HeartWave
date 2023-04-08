@@ -35,3 +35,11 @@ void BreathMonitor::updateRender(){
     }
   }
 }
+
+void BreathMonitor::reset(){
+  int count = dataArr.count();
+  for(int i = 0; i < count; i++){
+    dataArr[i]=false;
+  }
+  updateRender();
+}

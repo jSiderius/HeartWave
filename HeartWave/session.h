@@ -20,6 +20,15 @@ class Session : public Page
       void  select(direction dir);
       void  update();
 
+      void stopSession();
+      void startSession();
+
+      void updateHeartBeat();
+      void updateCoherence();
+      void updateHrvGraph();
+      void updateBreathMonitor();
+      void updateText();
+
       float batteryPercent = 25;
 
       float achievementVal = 11;
@@ -51,6 +60,8 @@ class Session : public Page
     struct timeval breathTimestamp;
     struct timeval breathTick;
     struct timeval startTimestamp;
+
+    bool sessionRunning;
 
 
 };

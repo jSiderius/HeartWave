@@ -1,11 +1,6 @@
 #include "session.h"
 
-Session::Session(std::string n, QWidget* parent) : Page(n, parent){
-  gettimeofday(&heartBeatTimestamp, NULL);
-  gettimeofday(&breathTimestamp, NULL);
-  gettimeofday(&bpmUpdateTimestamp, NULL);
-  gettimeofday(&breathTick, NULL);
-  gettimeofday(&startTimestamp, NULL);
+Session::Session(std::string n, QWidget* parent) : Page(n, parent), sessionRunning(false) {
   initGUI(parent);
 }
 
@@ -58,7 +53,15 @@ void Session::initGUI(QWidget *parent){
 }
 
 void Session::update(){
-  // UPDATE HEART BEAT
+    if(!sessionRunning) return;
+    updateHeartBeat();
+    updateCoherence();
+    updateHrvGraph();
+    updateBreathMonitor();
+    updateText();
+}
+
+void Session::updateHeartBeat(){
   struct timeval now;
   gettimeofday(&now, NULL);
   long microseconds = (now.tv_sec * 1000000 + now.tv_usec) - (heartBeatTimestamp.tv_sec * 1000000 + heartBeatTimestamp.tv_usec);//
@@ -69,10 +72,11 @@ void Session::update(){
   }else if(microseconds < HEART_BEAT_TIME/bpm){
 
   }else{
-      heartBeat->setStyleSheet("QPushButton { border-radius: 15px; background-color: blue; }");
+      heartBeat->setStyleSheet("QPushButton { border-radius: 15px; background-color: (238,238,238); }");
   }
+}
 
-  //UPDATE COHERENCE INDICATOR
+void Session::updateCoherence(){
   if(coherenceVal < 10){
     coherenceIndicator->setStyleSheet("background-color: red");
   }else if(coherenceVal < 20){
@@ -80,18 +84,24 @@ void Session::update(){
   }else{
     coherenceIndicator->setStyleSheet("background-color: green");
   }
+}
 
-  //UPDATE HRV GRAPH
-  microseconds = (now.tv_sec * 1000000 + now.tv_usec) - (bpmUpdateTimestamp.tv_sec * 1000000 + bpmUpdateTimestamp.tv_usec);
+void Session::updateHrvGraph(){
+  struct timeval now;
+  gettimeofday(&now, NULL);
+  long microseconds = (now.tv_sec * 1000000 + now.tv_usec) - (bpmUpdateTimestamp.tv_sec * 1000000 + bpmUpdateTimestamp.tv_usec);
   if(abs(microseconds) > (1000000/8)){
     gettimeofday(&bpmUpdateTimestamp, NULL);
     int rand = std::rand()%21 - 10;
     bpm = bpm + rand;
     hrv->addData(bpm);
   }
+}
 
-  //UPDATE BREATH MONITOR
-  microseconds = (now.tv_sec * 1000000 + now.tv_usec) - (breathTimestamp.tv_sec * 1000000 + breathTimestamp.tv_usec);
+void Session::updateBreathMonitor(){
+  struct timeval now;
+  gettimeofday(&now, NULL);
+  long microseconds = (now.tv_sec * 1000000 + now.tv_usec) - (breathTimestamp.tv_sec * 1000000 + breathTimestamp.tv_usec);
   long microsecondsTick = (now.tv_sec * 1000000 + now.tv_usec) - (breathTick.tv_sec * 1000000 + breathTick.tv_usec);
   if(abs(microseconds) > BREATHING_RATE*1000000){
     gettimeofday(&breathTimestamp, NULL);
@@ -100,17 +110,37 @@ void Session::update(){
     gettimeofday(&breathTick, NULL);
     breathMonitor->addData(false);
   }
+}
 
-  //UPDATE TEXT
-  float s = 1.11;
+void Session::updateText(){
+  struct timeval now;
+  gettimeofday(&now, NULL);
   long minutes = (abs(now.tv_sec - startTimestamp.tv_sec) - abs(now.tv_sec - startTimestamp.tv_sec)%60)/60;
   long seconds = abs(now.tv_sec - startTimestamp.tv_sec);
-  microseconds = abs(now.tv_usec - startTimestamp.tv_usec)/10000;
-  // qDebug()<<std::fixed<<std::setprecision(8)<<micro;
+  long microseconds = abs(now.tv_usec - startTimestamp.tv_usec)/10000;
   lengthValWidget->setText(QString::number(minutes)+QString(":")+QString::number(seconds)+QString(".")+QString::number(microseconds)); //Because QString is janky
 }
 
+void Session::stopSession(){
+  sessionRunning = false;
+  lengthValWidget->setText("0:0.00");
+  coherenceIndicator->setStyleSheet("background-color: grey");
+  heartBeat->setStyleSheet("border-radius: 15px; background-color: (238,238,238);");
+  hrv->reset();
+  breathMonitor->reset();
+}
+
+void Session::startSession(){
+  sessionRunning = true;
+  gettimeofday(&heartBeatTimestamp, NULL);
+  gettimeofday(&breathTimestamp, NULL);
+  gettimeofday(&bpmUpdateTimestamp, NULL);
+  gettimeofday(&breathTick, NULL);
+  gettimeofday(&startTimestamp, NULL);
+}
+
 Page* Session::click(){
+  sessionRunning ? stopSession() : startSession();
   return this;
 }
 
@@ -141,6 +171,7 @@ void  Session::render(){
   heartBeat->show();
   hrvFrame->show();
   breathFrame->show();
+  coherenceIndicator->show();
 }
 
 void  Session::select(direction dir){

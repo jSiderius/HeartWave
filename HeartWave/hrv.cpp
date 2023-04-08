@@ -34,5 +34,17 @@ void Hrv::paintEvent(QPaintEvent *event){
   }
 
   painter.drawPolyline(points, count);
+
+  painter.translate(width()-20, (1 - (qreal)dataArr[count-1] / maxVal)*height() - 10);
+  painter.drawText(rect(), QString::number(dataArr[count-1]));
+
   delete[] points;
+}
+
+void Hrv::reset(){
+  int count = dataArr.count();
+  for(int i = 0; i < count; i++){
+    dataArr[i]=0;
+  }
+  update();
 }

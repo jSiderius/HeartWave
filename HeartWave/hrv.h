@@ -10,6 +10,7 @@ class Hrv : public QWidget
   public:
       Hrv(int = 0, QWidget *parent = nullptr);
       void addData(int);
+      void reset(); //ULTIMATELY SHOULD RETURN SESSION DATA 
 
   protected:
     void paintEvent(QPaintEvent*);

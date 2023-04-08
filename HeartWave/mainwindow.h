@@ -39,7 +39,6 @@ private slots:
   void powerButtonPressed();
   void menuButtonPressed();
   void selectorButtonPressed();
-  void coherencePressed();
 
 };
 #endif // MAINWINDOW_H

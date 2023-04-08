@@ -48,19 +48,19 @@ void MainWindow::initGUI(){
 }
 
 void MainWindow::initPages(){
-  mainSession = new Session("Session", ui->menuFrame);
-  Page **arr = new Page*[5];
+  mainSession = new Session("Start New Session", ui->menuFrame);
+  Page **arr = new Page*[4];
   Page **subArr = new Page*[2];
   subArr[0] = new Menu("Sub Menu 1", NULL, 0, ui->menuFrame);
   subArr[1] = new Menu("Sub Menu 2", NULL, 0, ui->menuFrame);
 
-  arr[0] = new Menu("Menu 1", subArr, 2, ui->menuFrame);
-  arr[1] = mainSession;
-  arr[2] = new Menu("Menu 3", NULL, 0, ui->menuFrame);
-  arr[3] = new Menu("Menu 4", NULL, 0, ui->menuFrame);
-  arr[4] = new Menu("Menu 5", NULL, 0, ui->menuFrame);
 
-  currPage = new Menu("Main Menu", arr, 5, ui->menuFrame);
+  arr[0] = mainSession;
+  arr[1] = new Menu("Settings", NULL, 0, ui->menuFrame);
+  arr[2] = new Menu("Log/History", NULL, 0, ui->menuFrame); //Read in saved data & write a session display page class which stores each session
+  arr[3] = new Menu("Sub Menus", subArr, 2, ui->menuFrame);
+
+  currPage = new Menu("Main Menu", arr, 4, ui->menuFrame);
 }
 
 void MainWindow::update(){
@@ -94,16 +94,6 @@ void MainWindow::menuButtonPressed(){
 
 void MainWindow::selectorButtonPressed(){
   currPage = currPage->click();
-}
-
-void MainWindow::coherencePressed(){
-  // if(++curr%3 == 0){
-  //   ui->coherence->setStyleSheet("background-color: red");
-  // }else if(curr%3==1){
-  //   ui->coherence->setStyleSheet("background-color: blue");
-  // }else{
-  //   ui->coherence->setStyleSheet("QPushButton { background-color: green }");
-  // }
 }
 
 MainWindow::~MainWindow()
