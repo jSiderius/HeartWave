@@ -90,10 +90,10 @@ void Session::updateHrvGraph(){
   struct timeval now;
   gettimeofday(&now, NULL);
   long microseconds = (now.tv_sec * 1000000 + now.tv_usec) - (bpmUpdateTimestamp.tv_sec * 1000000 + bpmUpdateTimestamp.tv_usec);
-  if(abs(microseconds) > (1000000/8)){
+  if(abs(microseconds) > 1000000/HRV_FRAMES_PER_SECOND){
     gettimeofday(&bpmUpdateTimestamp, NULL);
-    int rand = std::rand()%21 - 10;
-    bpm = bpm + rand;
+    sinCurr += SIN_STEP_PER_SECOND/HRV_FRAMES_PER_SECOND;
+    bpm = std::sin(sinCurr)*40 + 50;
     hrv->addData(bpm);
   }
 }

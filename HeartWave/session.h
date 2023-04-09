@@ -9,6 +9,7 @@
 #define BATTERY_HEIGHT 30.0
 #define HEART_BEAT_TIME 20000000
 #define BREATHING_RATE 3
+#define SIN_STEP_PER_SECOND 5.0
 
 class Session : public Page
 {
@@ -54,7 +55,8 @@ class Session : public Page
     QFrame *breathFrame;
     BreathMonitor *breathMonitor;
 
-    int bpm = 60;
+    float bpm = 60;
+    float sinCurr = 0;
     struct timeval heartBeatTimestamp;
     struct timeval bpmUpdateTimestamp;
     struct timeval breathTimestamp;
