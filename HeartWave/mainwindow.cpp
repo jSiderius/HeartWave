@@ -7,6 +7,8 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
+    srand(time(nullptr));
+
     initGUI();
     initPages();
 
@@ -47,20 +49,33 @@ void MainWindow::initGUI(){
   ui->selectorButton->setStyleSheet("QPushButton { border-radius: 15px; background-color: rgb(0,0,0); }");
 }
 
+//Kind of a mess right now
+//If you want to add to a menu, it needs an empty array passed
 void MainWindow::initPages(){
-  mainSession = new Session("Start New Session", ui->menuFrame);
-  Page **arr = new Page*[4];
-  Page **subArr = new Page*[2];
+  int *cohData = new int[10];
+  int *data = new int[3000];
+  for(int i = 0; i < 10; i++){
+    cohData[i] = rand()%3;
+  }
+  for(int i = 0; i < 3000; i++){
+    data[i] = std::sin(i/8) * 10 + 50;
+  }
+
+  Page **arr = new Page*[MAX_ARR];
+  Page **subArr = new Page*[MAX_ARR];
   subArr[0] = new Menu("Sub Menu 1", NULL, 0, ui->menuFrame);
   subArr[1] = new Menu("Sub Menu 2", NULL, 0, ui->menuFrame);
 
+  Page **arr1 = new Page*[MAX_ARR];
+  sessionDataMenu = new Menu("Log/History", arr1, 0, ui->menuFrame);
+  mainSession = new Session("Start New Session",sessionDataMenu, ui->menuFrame);
 
   arr[0] = mainSession;
   arr[1] = new Menu("Settings", NULL, 0, ui->menuFrame);
-  arr[2] = new Menu("Log/History", NULL, 0, ui->menuFrame); //Read in saved data & write a session display page class which stores each session
-  arr[3] = new Menu("Sub Menus", subArr, 2, ui->menuFrame);
-
-  currPage = new Menu("Main Menu", arr, 4, ui->menuFrame);
+  arr[2] = sessionDataMenu; //Read in saved data & write a session display page class which stores each session
+  // arr[3] = new SessionData("Session Data", 3000, data, 10, cohData, ui->menuFrame);
+  // arr[3] = new Menu("Sub Menus", subArr, 2, ui->menuFrame);
+  currPage = new Menu("Main Menu", arr, 3, ui->menuFrame);
 }
 
 void MainWindow::update(){
@@ -76,9 +91,11 @@ void MainWindow::downButtonPressed(){
 }
 
 void MainWindow::leftButtonPressed(){
+  currPage->select(LEFT);
 }
 
 void MainWindow::rightButtonPressed(){
+  currPage->select(RIGHT);
 }
 
 void MainWindow::backButtonPressed(){

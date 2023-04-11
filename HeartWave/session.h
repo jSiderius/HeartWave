@@ -3,8 +3,10 @@
 
 #include "defs.h"
 #include "page.h"
+#include "menu.h"
 #include "hrv.h";
 #include "breathmonitor.h"
+#include "sessiondata.h"
 
 #define BATTERY_HEIGHT 30.0
 #define HEART_BEAT_TIME 20000000
@@ -14,11 +16,11 @@
 class Session : public Page
 {
   public:
-      Session(std::string, QWidget*);
+      Session(std::string, Menu*, QWidget*);
       Page* click();
       void  derender();
       void  render();
-      void  select(direction dir);
+      void  select(direction dir){}
       void  update();
 
       void stopSession();
@@ -37,6 +39,9 @@ class Session : public Page
       float coherenceVal = 6;
 
   private:
+    QWidget *parent;
+    Menu *sessionDataMenu;
+
     void initGUI(QWidget*);
 
     QPushButton *batteryEmpty;

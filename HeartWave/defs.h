@@ -28,6 +28,6 @@
 #define MAX_SESSION_SECONDS 300
 
 
-enum direction {UP, DOWN};
+enum direction {UP, DOWN, LEFT, RIGHT};
 
 #endif

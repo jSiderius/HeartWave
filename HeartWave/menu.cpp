@@ -57,3 +57,8 @@ Page* Menu::click(){
   subPages[pageSelected]->render();
   return subPages[pageSelected];
 }
+
+void Menu::add(Page *page){
+  page->setParent(this);
+  subPages[numPages++] = page;
+}

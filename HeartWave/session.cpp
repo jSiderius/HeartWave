@@ -1,6 +1,6 @@
 #include "session.h"
 
-Session::Session(std::string n, QWidget* parent) : Page(n, parent), sessionRunning(false) {
+Session::Session(std::string n, Menu *m, QWidget* parent) : Page(n, parent), sessionDataMenu(m), sessionRunning(false), parent(parent) {
   initGUI(parent);
 }
 
@@ -126,7 +126,14 @@ void Session::stopSession(){
   lengthValWidget->setText("0:0.00");
   coherenceIndicator->setStyleSheet("background-color: grey");
   heartBeat->setStyleSheet("border-radius: 15px; background-color: (238,238,238);");
-  hrv->reset();
+
+  float *dataArr;
+  float *cohArr;
+  int dataSize, cohSize;
+  hrv->reset(&dataArr, dataSize, &cohArr, cohSize);
+  SessionData *sd = new SessionData("Previous Session", dataSize, dataArr, cohSize, cohArr, parent);
+  sessionDataMenu->add(sd);
+
   breathMonitor->reset();
 }
 
@@ -172,8 +179,4 @@ void  Session::render(){
   hrvFrame->show();
   breathFrame->show();
   coherenceIndicator->show();
-}
-
-void  Session::select(direction dir){
-
 }

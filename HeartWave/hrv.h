@@ -3,8 +3,9 @@
 
 #include "defs.h"
 
-#define SECONDS_IN_VIEW 4.0 
+#define SECONDS_IN_VIEW 4.0
 #define OFFSET_RIGHT 45.0
+#define SCROLL_SIZE 100
 
 class Hrv : public QWidget
 {
@@ -13,14 +14,21 @@ class Hrv : public QWidget
   public:
       Hrv(float = 0, QWidget *parent = nullptr);
       void addData(float);
-      void reset(); //ULTIMATELY SHOULD RETURN SESSION DATA
+      void reset(float **, int &, float **, int &); //ULTIMATELY SHOULD RETURN SESSION DATA
+      void shiftLeft();
+      void shiftRight();
 
   protected:
     void paintEvent(QPaintEvent*);
   private:
-    float dataArr[static_cast<int>(MAX_SESSION_SECONDS*HRV_FRAMES_PER_SECOND)];
+    float *dataArr;
+    float *cohArr;
     int dataSize = 0;
+    int cohSize = 0;
+
     float maxVal;
+
+    int offset = 0;
 };
 
 #endif // HRV_H

@@ -9,6 +9,7 @@ class Menu : public Page
 
   public:
       Menu(std::string, Page**, int, QWidget*);
+      void add(Page *);
 
 
   private:

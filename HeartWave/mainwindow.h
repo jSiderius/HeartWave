@@ -4,6 +4,7 @@
 #include "defs.h"
 #include "menu.h"
 #include "session.h"
+#include "sessiondata.h"
 #include <QMainWindow>
 
 QT_BEGIN_NAMESPACE
@@ -24,6 +25,7 @@ private:
 
     Page *currPage;
     Session *mainSession;
+    Menu *sessionDataMenu;
 
     void initGUI();
     void initPages();
