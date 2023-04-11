@@ -3,7 +3,6 @@
 
 #include "defs.h"
 
-#define SECONDS_IN_VIEW 4.0
 #define OFFSET_RIGHT 45.0
 #define SCROLL_SIZE 100
 
@@ -17,6 +16,7 @@ class Hrv : public QWidget
       void reset(float **, int &, float **, int &); //ULTIMATELY SHOULD RETURN SESSION DATA
       void shiftLeft();
       void shiftRight();
+      float getTime();
 
   protected:
     void paintEvent(QPaintEvent*);

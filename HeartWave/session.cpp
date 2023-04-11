@@ -5,15 +5,6 @@ Session::Session(std::string n, Menu *m, QWidget* parent) : Page(n, parent), ses
 }
 
 void Session::initGUI(QWidget *parent){
-  batteryEmpty = new QPushButton(parent);
-  batteryFull = new QPushButton(parent);
-
-  float endA = BATTERY_HEIGHT * (100.0 - batteryPercent) / 100.0;
-  batteryEmpty->setGeometry(10, 40, 20, endA);
-  batteryFull->setGeometry(10, 40.0+endA,20, BATTERY_HEIGHT * batteryPercent / 100.0);
-
-  batteryEmpty->setStyleSheet("background-color: white; border: 1px solid black; border-bottom-left-radius: 0px; border-bottom-right-radius: 0px; border-top-left-radius: 2px; border-top-right-radius: 2px;");
-  batteryFull->setStyleSheet("background-color: green; border: 1px solid black; border-top-left-radius: 0px; border-top-right-radius: 0px; border-bottom-left-radius: 2px; border-bottom-right-radius: 2px;");
 
   coherence = new QLabel("Coherence", parent);
   length = new QLabel("Length", parent);
@@ -89,9 +80,10 @@ void Session::updateCoherence(){
 void Session::updateHrvGraph(){
   struct timeval now;
   gettimeofday(&now, NULL);
-  long microseconds = (now.tv_sec * 1000000 + now.tv_usec) - (bpmUpdateTimestamp.tv_sec * 1000000 + bpmUpdateTimestamp.tv_usec);
-  if(abs(microseconds) > 1000000/HRV_FRAMES_PER_SECOND){
+  long microseconds = (now.tv_sec * 1000000 + now.tv_usec) - (startTimestamp.tv_sec * 1000000 + startTimestamp.tv_usec);
+  if(abs(microseconds) > hrvUpdateTicks*1000000/HRV_FRAMES_PER_SECOND){
     gettimeofday(&bpmUpdateTimestamp, NULL);
+    hrvUpdateTicks++;
     sinCurr += SIN_STEP_PER_SECOND/HRV_FRAMES_PER_SECOND;
     bpm = std::sin(sinCurr)*40 + 50;
     hrv->addData(bpm);
@@ -115,13 +107,16 @@ void Session::updateBreathMonitor(){
 void Session::updateText(){
   struct timeval now;
   gettimeofday(&now, NULL);
-  long minutes = (abs(now.tv_sec - startTimestamp.tv_sec) - abs(now.tv_sec - startTimestamp.tv_sec)%60)/60;
-  long seconds = abs(now.tv_sec - startTimestamp.tv_sec);
-  long microseconds = abs(now.tv_usec - startTimestamp.tv_usec)/10000;
-  lengthValWidget->setText(QString::number(minutes)+QString(":")+QString::number(seconds)+QString(".")+QString::number(microseconds)); //Because QString is janky
+
+  // long minutes = (abs(now.tv_sec - startTimestamp.tv_sec) - abs(now.tv_sec - startTimestamp.tv_sec)%60)/60;
+  // long seconds = abs(now.tv_sec - startTimestamp.tv_sec);
+  // long microseconds = abs(now.tv_usec - startTimestamp.tv_usec)/10000;
+  // lengthValWidget->setText(QString::number(minutes)+QString(":")+QString::number(seconds)+QString(".")+QString::number(microseconds)); //Because QString is janky
+  lengthValWidget->setText(QString::number(hrv->getTime(), 'f', 2));
 }
 
 void Session::stopSession(){
+  if(!sessionRunning) return;
   sessionRunning = false;
   lengthValWidget->setText("0:0.00");
   coherenceIndicator->setStyleSheet("background-color: grey");
@@ -132,12 +127,13 @@ void Session::stopSession(){
   int dataSize, cohSize;
   hrv->reset(&dataArr, dataSize, &cohArr, cohSize);
   SessionData *sd = new SessionData("Previous Session", dataSize, dataArr, cohSize, cohArr, parent);
+  hrvUpdateTicks = 0;
   sessionDataMenu->add(sd);
-
   breathMonitor->reset();
 }
 
 void Session::startSession(){
+  if(sessionRunning)  return;
   sessionRunning = true;
   gettimeofday(&heartBeatTimestamp, NULL);
   gettimeofday(&breathTimestamp, NULL);
@@ -152,8 +148,6 @@ Page* Session::click(){
 }
 
 void  Session::derender(){
-  batteryEmpty->hide();
-  batteryFull->hide();
   coherence->hide();
   length->hide();
   achievement->hide();
@@ -167,8 +161,6 @@ void  Session::derender(){
 }
 
 void  Session::render(){
-  batteryEmpty->show();
-  batteryFull->show();
   coherence->show();
   length->show();
   achievement->show();

@@ -20,7 +20,6 @@ SessionData::SessionData(std::string name, int dSize, float *data, int cSize, fl
     if(cohArr[i] == 1) med++;
     if(cohArr[i] == 2) high++;
     sum+=cohArr[i];
-    qDebug()<<(cohArr[i]);
   }
   lowButton = new QPushButton(QString::number(low/cSize * 100, 'f', 2) + "%", parent);
   medButton = new QPushButton(QString::number(med/cSize * 100, 'f', 2) + "%", parent);
@@ -43,7 +42,7 @@ SessionData::SessionData(std::string name, int dSize, float *data, int cSize, fl
   lengthLabel = new QLabel("Length of Session", parent);
   coherenceVal = new QLabel(QString::number(sum/cSize,'f',2), parent);
   achievementVal = new QLabel(QString::number(sum,'f',2), parent);
-  lengthVal = new QLabel(QString::number(10.1,'f',2), parent);
+  lengthVal = new QLabel(QString::number(dSize/HRV_FRAMES_PER_SECOND,'f',2), parent);
 
   coherenceLabel->    setGeometry(45.5, 40, 150, 20);
   lengthLabel->       setGeometry(175, 40, 150, 20);

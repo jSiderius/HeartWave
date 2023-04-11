@@ -24,8 +24,9 @@
 
 #define MAX_ARR 256
 #define NUM_BUTTONS 4
-#define HRV_FRAMES_PER_SECOND 100.0
+#define HRV_FRAMES_PER_SECOND 30.0
 #define MAX_SESSION_SECONDS 300
+#define SECONDS_IN_VIEW 4.0
 
 
 enum direction {UP, DOWN, LEFT, RIGHT};

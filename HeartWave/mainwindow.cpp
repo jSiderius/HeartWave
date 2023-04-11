@@ -12,6 +12,8 @@ MainWindow::MainWindow(QWidget *parent)
     initGUI();
     initPages();
 
+    batteryTimestamp = time(NULL);
+
     QTimer *timer = new QTimer(this);
     timer->setInterval(16);
     connect(timer, SIGNAL(timeout()), this, SLOT(update()));
@@ -47,6 +49,20 @@ void MainWindow::initGUI(){
   ui->menuButton->setIconSize(QSize(32,32));
 
   ui->selectorButton->setStyleSheet("QPushButton { border-radius: 15px; background-color: rgb(0,0,0); }");
+
+  batteryEmpty = new QPushButton(this);
+  batteryFull = new QPushButton(this);
+
+  float endA = BATTERY_HEIGHT * (100.0 - batteryPercent) / 100.0;
+  batteryEmpty->setGeometry(35, 20, 20, endA);
+  batteryFull->setGeometry(35, 20.0+endA,20, BATTERY_HEIGHT * batteryPercent / 100.0);
+
+  QString eStr = batteryPercent == 0 ? "background-color: white; border: 1px solid black; border-radius: 2px;" : "background-color: white; border: 1px solid black; border-bottom-left-radius: 0px; border-bottom-right-radius: 0px; border-top-left-radius: 2px; border-top-right-radius: 2px;";
+  QString fStr = batteryPercent == 100 ? "background-color: green; border: 1px solid black; border-radius: 2px;" : "background-color: green; border: 1px solid black; border-top-left-radius: 0px; border-top-right-radius: 0px; border-bottom-left-radius: 2px; border-bottom-right-radius: 2px;";
+  batteryEmpty->setStyleSheet(eStr);
+  batteryFull->setStyleSheet(fStr);
+  connect(batteryEmpty, &QPushButton::pressed, this, &MainWindow::charge);
+  connect(batteryFull, &QPushButton::pressed, this, &MainWindow::charge);
 }
 
 //Kind of a mess right now
@@ -80,37 +96,89 @@ void MainWindow::initPages(){
 
 void MainWindow::update(){
   mainSession->update();
+  updateBattery();
+}
+
+void MainWindow::updateBattery(){
+  if(abs(difftime(batteryTimestamp, time(NULL))) > BATTERY_DRAIN && poweredOn){
+    batteryTimestamp = time(NULL);
+    batteryPercent = batteryPercent - 10 > 0 ? batteryPercent - 10 : 0;
+
+    float endA = BATTERY_HEIGHT * (100.0 - batteryPercent) / 100.0;
+    batteryEmpty->setGeometry(35, 20, 20, endA);
+    batteryFull->setGeometry(35, 20.0+endA,20, BATTERY_HEIGHT * batteryPercent / 100.0);
+
+    QString eStr = batteryPercent == 0 ? "background-color: white; border: 1px solid black; border-radius: 2px;" : "background-color: white; border: 1px solid black; border-bottom-left-radius: 0px; border-bottom-right-radius: 0px; border-top-left-radius: 2px; border-top-right-radius: 2px;";
+    QString fStr;
+    if(batteryPercent == 100){
+      fStr = "background-color: green; border: 1px solid black; border-radius: 2px;";
+    }else if(batteryPercent <= 30){
+      fStr = "background-color: red; border: 1px solid black; border-top-left-radius: 0px; border-top-right-radius: 0px; border-bottom-left-radius: 2px; border-bottom-right-radius: 2px;";
+    }else{
+      fStr = "background-color: green; border: 1px solid black; border-top-left-radius: 0px; border-top-right-radius: 0px; border-bottom-left-radius: 2px; border-bottom-right-radius: 2px;";
+    }
+    batteryEmpty->setStyleSheet(eStr);
+    batteryFull->setStyleSheet(fStr);
+  }
+  if(batteryPercent == 0) powerOff();
+
+}
+
+void MainWindow::powerOff(){
+  poweredOn = false;
+  currPage->derender();
+  mainSession->stopSession();
+}
+
+void MainWindow::powerOn(){
+  if(batteryPercent == 0) return;
+  poweredOn = true;
+  menuButtonPressed();
 }
 
 void MainWindow::upButtonPressed(){
+  if(!poweredOn)  return;
   currPage->select(UP);
 }
 
 void MainWindow::downButtonPressed(){
+  if(!poweredOn)  return;
   currPage->select(DOWN);
 }
 
 void MainWindow::leftButtonPressed(){
+  if(!poweredOn)  return;
   currPage->select(LEFT);
 }
 
 void MainWindow::rightButtonPressed(){
+  if(!poweredOn)  return;
   currPage->select(RIGHT);
 }
 
 void MainWindow::backButtonPressed(){
+  if(!poweredOn)  return;
   currPage = currPage->back();
 }
 
 void MainWindow::powerButtonPressed(){
+  poweredOn ? powerOff() : powerOn();
 }
 
 void MainWindow::menuButtonPressed(){
+  if(!poweredOn)  return;
   currPage = currPage->mainPage();
 }
 
 void MainWindow::selectorButtonPressed(){
+  if(!poweredOn)  return;
   currPage = currPage->click();
+}
+
+void MainWindow::charge(){
+  batteryPercent = 100;
+  batteryFull->setGeometry(35, 20.0,20, BATTERY_HEIGHT);
+  batteryFull->setStyleSheet("background-color: green; border: 1px solid black; border-radius: 2px;");
 }
 
 MainWindow::~MainWindow()

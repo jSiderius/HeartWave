@@ -7,6 +7,8 @@
 #include "sessiondata.h"
 #include <QMainWindow>
 
+#define BATTERY_DRAIN 1
+
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -30,6 +32,19 @@ private:
     void initGUI();
     void initPages();
 
+    void updateBattery();
+
+    void powerOn();
+    void powerOff();
+
+    float batteryPercent = 100;
+    QPushButton *batteryEmpty;
+    QPushButton *batteryFull;
+
+    std::time_t batteryTimestamp;
+
+    bool poweredOn = true;
+
 
 private slots:
   void update();
@@ -41,6 +56,7 @@ private slots:
   void powerButtonPressed();
   void menuButtonPressed();
   void selectorButtonPressed();
+  void charge();
 
 };
 #endif // MAINWINDOW_H

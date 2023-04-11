@@ -15,6 +15,7 @@
 
 class Session : public Page
 {
+
   public:
       Session(std::string, Menu*, QWidget*);
       Page* click();
@@ -28,11 +29,9 @@ class Session : public Page
 
       void updateHeartBeat();
       void updateCoherence();
-      void updateHrvGraph();
+      // void updateHrvGraph();
       void updateBreathMonitor();
       void updateText();
-
-      float batteryPercent = 25;
 
       float achievementVal = 11;
       float lengthVal = 11;
@@ -44,8 +43,6 @@ class Session : public Page
 
     void initGUI(QWidget*);
 
-    QPushButton *batteryEmpty;
-    QPushButton *batteryFull;
     QPushButton *coherenceIndicator;
 
     QLabel *coherence;
@@ -62,6 +59,7 @@ class Session : public Page
 
     float bpm = 60;
     float sinCurr = 0;
+    int hrvUpdateTicks = 0;
     struct timeval heartBeatTimestamp;
     struct timeval bpmUpdateTimestamp;
     struct timeval breathTimestamp;
@@ -69,6 +67,9 @@ class Session : public Page
     struct timeval startTimestamp;
 
     bool sessionRunning;
+
+    private slots:
+      void updateHrvGraph();
 
 
 };
