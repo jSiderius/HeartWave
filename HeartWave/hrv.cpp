@@ -9,11 +9,34 @@ void Hrv::addData(float data){ //probably return coh score if calculated
   dataArr[dataSize++]=data;
   maxVal = qMax(maxVal, data);
 
-  if(dataSize % (static_cast<int>(HRV_FRAMES_PER_SECOND)) == 0){ //this is not a good if statement
+  if(dataSize % (static_cast<int>(HRV_FRAMES_PER_SECOND) * COHERENCE_UPDATE_SECS) == 0){ //this is not a good if statement
+    float coherence = calculateCoherence();
     cohArr[cohSize++] = rand()%3;
+    // qDebug()<<coherence;
   }
 
   update();
+}
+
+float Hrv::calculateCoherence(){
+  int count = dataSize>MAX_HZ_SINE_WAVE*HRV_FRAMES_PER_SECOND ? MAX_HZ_SINE_WAVE*HRV_FRAMES_PER_SECOND : dataSize;
+  int start = dataSize - count;
+
+  int peak = 0;
+  float integral = 0;
+  for(int i = start; i < dataSize; i++){
+    integral += dataArr[i]/HRV_FRAMES_PER_SECOND;
+    if(dataArr[i] > dataArr[peak])  peak = i;
+  }
+
+  float peakIntegral = 0;
+  start = peak - std::ceil(PEAK_INTEGRAL_HZ*HRV_FRAMES_PER_SECOND/2) > 0 ? peak - std::ceil(PEAK_INTEGRAL_HZ*HRV_FRAMES_PER_SECOND/2) : 0;
+  int end = peak + std::ceil(PEAK_INTEGRAL_HZ*HRV_FRAMES_PER_SECOND/2) < dataSize ? peak + std::ceil(PEAK_INTEGRAL_HZ*HRV_FRAMES_PER_SECOND/2) : dataSize;
+  for(int i = start ; i < end; i++){
+    peakIntegral += dataArr[i]/HRV_FRAMES_PER_SECOND;
+  }
+  // qDebug()<<"time"<<dataSize/HRV_FRAMES_PER_SECOND<<"peakIntegral: "<<peakIntegral<<"integral: "<<integral<<"coherence"<<peakIntegral / (integral - peakIntegral);
+  return peakIntegral / (integral - peakIntegral);
 }
 
 void Hrv::paintEvent(QPaintEvent *event){

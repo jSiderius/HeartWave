@@ -7,7 +7,7 @@
 #include "sessiondata.h"
 #include <QMainWindow>
 
-#define BATTERY_DRAIN 1
+#define BATTERY_DRAIN 60
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -36,6 +36,8 @@ private:
 
     void powerOn();
     void powerOff();
+    void writeToFile();
+    void readInSessionData(Menu*);
 
     float batteryPercent = 100;
     QPushButton *batteryEmpty;

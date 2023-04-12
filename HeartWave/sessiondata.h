@@ -15,6 +15,7 @@ class SessionData : public Page
       void  render();
       void  select(direction dir);
       void  update(){}
+      void writeToFile();
 
   private:
       float *dataArr;

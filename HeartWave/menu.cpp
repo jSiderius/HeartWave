@@ -62,3 +62,9 @@ void Menu::add(Page *page){
   page->setParent(this);
   subPages[numPages++] = page;
 }
+
+void Menu::writeToFile(){
+  for(int i = 0; i < numPages; i++){
+    subPages[i]->writeToFile();
+  }
+}

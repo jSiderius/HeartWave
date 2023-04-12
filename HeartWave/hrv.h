@@ -21,6 +21,8 @@ class Hrv : public QWidget
   protected:
     void paintEvent(QPaintEvent*);
   private:
+    float calculateCoherence();
+
     float *dataArr;
     float *cohArr;
     int dataSize = 0;

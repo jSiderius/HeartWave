@@ -20,6 +20,8 @@ class Page
       virtual void render() = 0;
       virtual void derender() = 0;
 
+      virtual void writeToFile(){};
+
       void setColor(QPushButton*, QColor);
 
   protected:

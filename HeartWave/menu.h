@@ -10,6 +10,7 @@ class Menu : public Page
   public:
       Menu(std::string, Page**, int, QWidget*);
       void add(Page *);
+      void writeToFile();
 
 
   private:
@@ -17,6 +18,7 @@ class Menu : public Page
     void  derender();
     void  render();
     void  select(direction dir);
+
 
     Page **subPages;
 

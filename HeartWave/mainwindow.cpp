@@ -68,14 +68,6 @@ void MainWindow::initGUI(){
 //Kind of a mess right now
 //If you want to add to a menu, it needs an empty array passed
 void MainWindow::initPages(){
-  int *cohData = new int[10];
-  int *data = new int[3000];
-  for(int i = 0; i < 10; i++){
-    cohData[i] = rand()%3;
-  }
-  for(int i = 0; i < 3000; i++){
-    data[i] = std::sin(i/8) * 10 + 50;
-  }
 
   Page **arr = new Page*[MAX_ARR];
   Page **subArr = new Page*[MAX_ARR];
@@ -88,10 +80,10 @@ void MainWindow::initPages(){
 
   arr[0] = mainSession;
   arr[1] = new Menu("Settings", NULL, 0, ui->menuFrame);
-  arr[2] = sessionDataMenu; //Read in saved data & write a session display page class which stores each session
-  // arr[3] = new SessionData("Session Data", 3000, data, 10, cohData, ui->menuFrame);
-  // arr[3] = new Menu("Sub Menus", subArr, 2, ui->menuFrame);
+  arr[2] = sessionDataMenu; 
   currPage = new Menu("Main Menu", arr, 3, ui->menuFrame);
+
+  readInSessionData(sessionDataMenu);
 }
 
 void MainWindow::update(){
@@ -128,6 +120,7 @@ void MainWindow::powerOff(){
   poweredOn = false;
   currPage->derender();
   mainSession->stopSession();
+  writeToFile();
 }
 
 void MainWindow::powerOn(){
@@ -179,6 +172,50 @@ void MainWindow::charge(){
   batteryPercent = 100;
   batteryFull->setGeometry(35, 20.0,20, BATTERY_HEIGHT);
   batteryFull->setStyleSheet("background-color: green; border: 1px solid black; border-radius: 2px;");
+}
+
+void MainWindow::writeToFile(){
+  char buff[200];
+  getcwd(buff, 200);
+  QFile file(QString::fromStdString(buff)+"/../HeartWave/data.txt");
+  file.open(QIODevice::WriteOnly);
+  file.close();
+  sessionDataMenu->writeToFile();
+}
+
+void MainWindow::readInSessionData(Menu *sessionMenu){
+  char buff[200];
+  getcwd(buff, 200);
+  QFile file(QString::fromStdString(buff)+"/../HeartWave/data.txt");
+  file.open(QIODevice::ReadOnly | QIODevice::Text);
+
+  QByteArray fileData = file.readAll();
+  QStringList sessions = QString(fileData).split('$');
+
+  int j = 0;
+  foreach(QString session, sessions){
+    QStringList arrayStrings = QString(session).split('&');
+    if(arrayStrings.count()!=2)continue;
+
+    QStringList dataStrings = QString(arrayStrings[0]).split(',');
+    QStringList cohStrings = QString(arrayStrings[1]).split(',');
+
+    float *dataArr = new float[dataStrings.count()];
+    float *cohArr = new float[cohStrings.count()];
+
+    int i = 0;
+    foreach(QString val, dataStrings){
+      if(val!="")dataArr[i++] = val.toFloat();
+    }
+    i = 0;
+    foreach(QString val, cohStrings){
+      cohArr[i++] = val.toFloat();
+    }
+
+    qDebug()<<cohStrings;
+    qDebug()<<"\n\n";
+    sessionMenu->add(new SessionData("Session Data" + std::to_string(++j), dataStrings.count()-3, dataArr, cohStrings.count()-1, cohArr, ui->menuFrame));
+  }
 }
 
 MainWindow::~MainWindow()

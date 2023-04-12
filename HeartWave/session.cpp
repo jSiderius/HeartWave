@@ -85,7 +85,7 @@ void Session::updateHrvGraph(){
     gettimeofday(&bpmUpdateTimestamp, NULL);
     hrvUpdateTicks++;
     sinCurr += SIN_STEP_PER_SECOND/HRV_FRAMES_PER_SECOND;
-    bpm = std::sin(sinCurr)*40 + 50;
+    bpm = std::sin(sinCurr)*10 + 70;
     hrv->addData(bpm);
   }
 }
@@ -105,13 +105,6 @@ void Session::updateBreathMonitor(){
 }
 
 void Session::updateText(){
-  struct timeval now;
-  gettimeofday(&now, NULL);
-
-  // long minutes = (abs(now.tv_sec - startTimestamp.tv_sec) - abs(now.tv_sec - startTimestamp.tv_sec)%60)/60;
-  // long seconds = abs(now.tv_sec - startTimestamp.tv_sec);
-  // long microseconds = abs(now.tv_usec - startTimestamp.tv_usec)/10000;
-  // lengthValWidget->setText(QString::number(minutes)+QString(":")+QString::number(seconds)+QString(".")+QString::number(microseconds)); //Because QString is janky
   lengthValWidget->setText(QString::number(hrv->getTime(), 'f', 2));
 }
 
@@ -126,7 +119,7 @@ void Session::stopSession(){
   float *cohArr;
   int dataSize, cohSize;
   hrv->reset(&dataArr, dataSize, &cohArr, cohSize);
-  SessionData *sd = new SessionData("Previous Session", dataSize, dataArr, cohSize, cohArr, parent);
+  SessionData *sd = new SessionData("Current Session Data"+std::to_string(++numSessions), dataSize, dataArr, cohSize, cohArr, parent);
   hrvUpdateTicks = 0;
   sessionDataMenu->add(sd);
   breathMonitor->reset();
