@@ -1,6 +1,6 @@
 #include "session.h"
 
-Session::Session(std::string n, Menu *m, QWidget* parent) : Page(n, parent), sessionDataMenu(m), sessionRunning(false), parent(parent) {
+Session::Session(std::string n, Menu *m, int &br, QWidget* parent) : Page(n, parent), sessionDataMenu(m), sessionRunning(false), breathingRate(br), parent(parent) {
   initGUI(parent);
 }
 
@@ -97,16 +97,14 @@ void Session::updateHrvGraph(){
 }
 
 void Session::updateBreathMonitor(){
+
   if(!sessionRunning)return;
-  struct timeval now;
-  gettimeofday(&now, NULL);
-  long microseconds = (now.tv_sec * 1000000 + now.tv_usec) - (breathTimestamp.tv_sec * 1000000 + breathTimestamp.tv_usec);
-  long microsecondsTick = (now.tv_sec * 1000000 + now.tv_usec) - (breathTick.tv_sec * 1000000 + breathTick.tv_usec);
-  if(abs(microseconds) > BREATHING_RATE*1000000){
-    gettimeofday(&breathTimestamp, NULL);
+  if(hrv->getTime() > breathingRate * breathTick){
+    breathTick++;
+    secondTick++;
     breathMonitor->addData(true);
-  }else if(abs(microsecondsTick) > (1000000/2)){
-    gettimeofday(&breathTick, NULL);
+  }else if(hrv->getTime() > secondTick){
+    secondTick++;
     breathMonitor->addData(false);
   }
 }
@@ -122,6 +120,8 @@ void Session::updateText(){
 void Session::stopSession(){
   if(!sessionRunning) return;
   sessionRunning = false;
+  breathTick = 0;
+  secondTick = 0;
   lengthValWidget->setText("0:0.00");
   heartBeat->setStyleSheet("border-radius: 15px; background-color: (238,238,238);");
 
@@ -141,7 +141,6 @@ void Session::startSession(){
   gettimeofday(&heartBeatTimestamp, NULL);
   gettimeofday(&breathTimestamp, NULL);
   gettimeofday(&bpmUpdateTimestamp, NULL);
-  gettimeofday(&breathTick, NULL);
   gettimeofday(&startTimestamp, NULL);
 }
 

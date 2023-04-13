@@ -13,6 +13,7 @@ class Menu : public Page
       void writeToFile();
       void remove();
       void removeAll();
+      void print();
 
 
   private:

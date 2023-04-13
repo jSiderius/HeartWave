@@ -15,13 +15,14 @@ class Page
       Page* back();
       Page* mainPage();
 
-      virtual Page* click(){ return this; };
-      virtual void render(){};
-      virtual void derender(){};
-      virtual void select(direction){};
+      virtual Page* click(){ return this; }
+      virtual void render(){}
+      virtual void derender(){}
+      virtual void select(direction){}
       virtual void remove(){}
       virtual void removeAll(){}
-      virtual void writeToFile(){};
+      virtual void writeToFile(){}
+      virtual void print(){}
 
       void setColor(QPushButton*, QColor);
 

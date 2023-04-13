@@ -4,6 +4,7 @@
 #include "defs.h"
 #include "menu.h"
 #include "session.h"
+#include "setting.h"
 #include "sessiondata.h"
 #include <QMainWindow>
 
@@ -22,6 +23,7 @@ public:
     ~MainWindow();
 
 private:
+    int breathingRateHolder = 10;
     Ui::MainWindow *ui;
     int curr = 0;
 

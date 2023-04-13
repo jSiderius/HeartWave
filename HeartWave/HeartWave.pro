@@ -24,7 +24,8 @@ SOURCES += \
     menu.cpp \
     page.cpp \
     session.cpp \
-    sessiondata.cpp
+    sessiondata.cpp \
+    setting.cpp
 
 HEADERS += \
     breathmonitor.h \
@@ -33,7 +34,8 @@ HEADERS += \
     menu.h \
     page.h \
     session.h \
-    sessiondata.h
+    sessiondata.h \
+    setting.h
 
 FORMS += \
     mainwindow.ui

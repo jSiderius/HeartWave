@@ -71,21 +71,24 @@ void MainWindow::initGUI(){
   connect(batteryFull, &QPushButton::pressed, this, &MainWindow::charge);
 }
 
-//Kind of a mess right now
-//If you want to add to a menu, it needs an empty array passed
 void MainWindow::initPages(){
 
   Page **arr = new Page*[MAX_ARR];
-  Page **subArr = new Page*[MAX_ARR];
-  subArr[0] = new Menu("Sub Menu 1", NULL, 0, false, ui->menuFrame);
-  subArr[1] = new Menu("Sub Menu 2", NULL, 0, false, ui->menuFrame);
+  Page **settings = new Page*[MAX_ARR];
+
+  int *intArr = new int[30];
+  QString*stringArr = new QString[30];
+  for(int i = 1; i < 31; i++){
+    intArr[i-1] = i;
+    stringArr[i-1] = QString::number(i);
+  }settings[0] = new Setting<int>("Breath Pacer Setting", breathingRateHolder, intArr, 60, stringArr, ui->menuFrame);
 
   Page **arr1 = new Page*[MAX_ARR];
   sessionDataMenu = new Menu("Log/History", arr1, 0, true, ui->menuFrame);
-  mainSession = new Session("Start New Session", sessionDataMenu, ui->menuFrame);
+  mainSession = new Session("Start New Session", sessionDataMenu, breathingRateHolder, ui->menuFrame);
 
   arr[0] = mainSession;
-  arr[1] = new Menu("Settings", NULL, 0, false, ui->menuFrame);
+  arr[1] = new Menu("Settings", settings, 1, false, ui->menuFrame);
   arr[2] = sessionDataMenu;
   currPage = new Menu("Main Menu", arr, 3, false, ui->menuFrame);
 

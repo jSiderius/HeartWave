@@ -89,3 +89,7 @@ void Menu::removeAll(){
   numPages=0;
   render();
 }
+
+void Menu::print(){
+  qDebug()<<"Menu";
+}
