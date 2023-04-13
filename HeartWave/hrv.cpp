@@ -48,7 +48,8 @@ void Hrv::paintEvent(QPaintEvent *event){
   painter.setPen(QPen(Qt::black, 2));
   if(count < 2) return;
 
-  double step = (width()-OFFSET_RIGHT)/(count-1.0);
+  double step = (width()-OFFSET_RIGHT)/(SECONDS_IN_VIEW*HRV_FRAMES_PER_SECOND);
+
   QPointF *points = new QPointF[count];
 
   int start = dataSize - count - offset > 0 ? dataSize - count - offset : 0;
@@ -108,4 +109,15 @@ void Hrv::shiftRight(){
 
 float Hrv::getTime(){
   return dataSize/HRV_FRAMES_PER_SECOND;
+}
+
+float Hrv::getCoherence(){
+  return cohArr[cohSize-1];
+}
+
+float Hrv::getAchievement(){
+  float achievement = 0;
+  for(int i = 0; i < cohSize; i++){
+    achievement+=cohArr[i];
+  }return achievement;
 }

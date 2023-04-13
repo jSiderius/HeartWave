@@ -17,6 +17,8 @@ class Hrv : public QWidget
       void shiftLeft();
       void shiftRight();
       float getTime();
+      float getCoherence();
+      float getAchievement();
 
   protected:
     void paintEvent(QPaintEvent*);

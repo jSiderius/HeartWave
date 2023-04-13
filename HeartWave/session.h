@@ -10,14 +10,15 @@
 
 #define BATTERY_HEIGHT 30.0
 #define HEART_BEAT_TIME 20000000
-#define BREATHING_RATE 3
+#define BREATHING_RATE 9
 #define SIN_STEP_PER_SECOND 1.63369 //bounds for coherence (.251327, 1.63369)
 
-class Session : public Page
+class Session : public QObject, public Page
 {
-
+  Q_OBJECT
   public:
       Session(std::string, Menu*, QWidget*);
+      ~Session(){}
       Page* click();
       void  derender();
       void  render();
@@ -42,6 +43,7 @@ class Session : public Page
     Menu *sessionDataMenu;
 
     void initGUI(QWidget*);
+    void coherenceChangeAudio();
 
     QPushButton *coherenceIndicator;
 
@@ -67,11 +69,12 @@ class Session : public Page
     struct timeval startTimestamp;
 
     bool sessionRunning;
-
+    bool sensorConnected = false;
     int numSessions = 0;
 
     private slots:
       void updateHrvGraph();
+      void changeConnection();
 
 
 };

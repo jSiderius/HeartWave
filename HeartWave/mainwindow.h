@@ -58,6 +58,8 @@ private slots:
   void powerButtonPressed();
   void menuButtonPressed();
   void selectorButtonPressed();
+  void deleteButtonPressed();
+  void deleteAllButtonPressed();
   void charge();
 
 };

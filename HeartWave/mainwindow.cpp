@@ -30,6 +30,8 @@ void MainWindow::initGUI(){
   connect(ui->powerButton, &QPushButton::pressed, this, &MainWindow::powerButtonPressed);
   connect(ui->menuButton, &QPushButton::pressed, this, &MainWindow::menuButtonPressed);
   connect(ui->selectorButton, &QPushButton::pressed, this, &MainWindow::selectorButtonPressed);
+  connect(ui->deleteButton, &QPushButton::pressed, this, &MainWindow::deleteButtonPressed);
+  connect(ui->deleteAllButton, &QPushButton::pressed, this, &MainWindow::deleteAllButtonPressed);
   // connect(ui->coherence, &QPushButton::pressed, this, &MainWindow::coherencePressed);//Probably not necessary long term
 
   ui->upButton->setIcon(QIcon(":/images/upArrow.png"));
@@ -39,6 +41,8 @@ void MainWindow::initGUI(){
   ui->powerButton->setIcon(QIcon(":/images/powerButton.png"));
   ui->backButton->setIcon(QIcon(":/images/backButton.png"));
   ui->menuButton->setIcon(QIcon(":/images/menuButton.png"));
+  ui->deleteButton->setIcon(QIcon(":/images/delete.png"));
+  ui->deleteAllButton->setIcon(QIcon(":/images/deleteAll.png"));
 
   ui->upButton->setIconSize(QSize(32,32));
   ui->downButton->setIconSize(QSize(32,32));
@@ -47,6 +51,8 @@ void MainWindow::initGUI(){
   ui->powerButton->setIconSize(QSize(32,32));
   ui->backButton->setIconSize(QSize(32,32));
   ui->menuButton->setIconSize(QSize(32,32));
+  ui->deleteButton->setIconSize(QSize(32,32));
+  ui->deleteAllButton->setIconSize(QSize(32,32));
 
   ui->selectorButton->setStyleSheet("QPushButton { border-radius: 15px; background-color: rgb(0,0,0); }");
 
@@ -71,17 +77,17 @@ void MainWindow::initPages(){
 
   Page **arr = new Page*[MAX_ARR];
   Page **subArr = new Page*[MAX_ARR];
-  subArr[0] = new Menu("Sub Menu 1", NULL, 0, ui->menuFrame);
-  subArr[1] = new Menu("Sub Menu 2", NULL, 0, ui->menuFrame);
+  subArr[0] = new Menu("Sub Menu 1", NULL, 0, false, ui->menuFrame);
+  subArr[1] = new Menu("Sub Menu 2", NULL, 0, false, ui->menuFrame);
 
   Page **arr1 = new Page*[MAX_ARR];
-  sessionDataMenu = new Menu("Log/History", arr1, 0, ui->menuFrame);
-  mainSession = new Session("Start New Session",sessionDataMenu, ui->menuFrame);
+  sessionDataMenu = new Menu("Log/History", arr1, 0, true, ui->menuFrame);
+  mainSession = new Session("Start New Session", sessionDataMenu, ui->menuFrame);
 
   arr[0] = mainSession;
-  arr[1] = new Menu("Settings", NULL, 0, ui->menuFrame);
-  arr[2] = sessionDataMenu; 
-  currPage = new Menu("Main Menu", arr, 3, ui->menuFrame);
+  arr[1] = new Menu("Settings", NULL, 0, false, ui->menuFrame);
+  arr[2] = sessionDataMenu;
+  currPage = new Menu("Main Menu", arr, 3, false, ui->menuFrame);
 
   readInSessionData(sessionDataMenu);
 }
@@ -166,6 +172,14 @@ void MainWindow::menuButtonPressed(){
 void MainWindow::selectorButtonPressed(){
   if(!poweredOn)  return;
   currPage = currPage->click();
+}
+
+void MainWindow::deleteButtonPressed(){
+  currPage->remove();
+}
+
+void MainWindow::deleteAllButtonPressed(){
+  currPage->removeAll();
 }
 
 void MainWindow::charge(){

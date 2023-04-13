@@ -9,17 +9,18 @@ class Page
       Page(std::string, QWidget*);
       virtual ~Page(){}
 
-      virtual void select(direction) = 0;
       QString getName(){ return name; }
       void setParent(Page*);
 
-      virtual Page* click() = 0;
       Page* back();
       Page* mainPage();
 
-      virtual void render() = 0;
-      virtual void derender() = 0;
-
+      virtual Page* click(){ return this; };
+      virtual void render(){};
+      virtual void derender(){};
+      virtual void select(direction){};
+      virtual void remove(){}
+      virtual void removeAll(){}
       virtual void writeToFile(){};
 
       void setColor(QPushButton*, QColor);

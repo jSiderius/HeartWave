@@ -15,14 +15,15 @@
 #include <QWidget>
 #include <numeric>
 #include <fstream>
+#include <QObject>
 #include <iostream>
 #include <QPainter>
 #include <unistd.h>
 #include <sys/time.h>
+#include <QTextStream>
 #include <QPushButton>
 #include <QPaintEvent>
 #include <QPainterPath>
-#include <QTextStream>
 #include <eigen3/Eigen/Core>
 #include <eigen3/Eigen/Dense>
 

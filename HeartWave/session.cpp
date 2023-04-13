@@ -27,6 +27,7 @@ void Session::initGUI(QWidget *parent){
   heartBeat = new QPushButton(parent);
   heartBeat->setGeometry(411, 40, 30, 30);
   heartBeat->setStyleSheet("QPushButton { border-radius: 15px; background-color: red; }");
+  connect(heartBeat, &QPushButton::pressed, this, &Session::changeConnection);
 
   hrvFrame = new QFrame(parent);
   hrvFrame->setGeometry(45.5, 80, 360, 100);
@@ -44,7 +45,6 @@ void Session::initGUI(QWidget *parent){
 }
 
 void Session::update(){
-    if(!sessionRunning) return;
     updateHeartBeat();
     updateCoherence();
     updateHrvGraph();
@@ -56,8 +56,11 @@ void Session::updateHeartBeat(){
   struct timeval now;
   gettimeofday(&now, NULL);
   long microseconds = (now.tv_sec * 1000000 + now.tv_usec) - (heartBeatTimestamp.tv_sec * 1000000 + heartBeatTimestamp.tv_usec);//
-  if(microseconds > (60*1000000/(bpm))){
-      coherenceVal++;
+  if(!sensorConnected){
+    heartBeat->setStyleSheet("QPushButton { border-radius: 15px; background-color: blue; }");
+  }else if(!sessionRunning){
+    heartBeat->setStyleSheet("QPushButton { border-radius: 15px; background-color: (238,238,238); }");
+  }else if(microseconds > (60*1000000/(bpm))){
       gettimeofday(&heartBeatTimestamp, NULL);
       heartBeat->setStyleSheet("QPushButton { border-radius: 15px; background-color: red; }");
   }else if(microseconds < HEART_BEAT_TIME/bpm){
@@ -68,9 +71,11 @@ void Session::updateHeartBeat(){
 }
 
 void Session::updateCoherence(){
-  if(coherenceVal < 10){
+  if(!sessionRunning){
+    coherenceIndicator->setStyleSheet("background-color: grey");
+  }else if(coherenceVal == 0){
     coherenceIndicator->setStyleSheet("background-color: red");
-  }else if(coherenceVal < 20){
+  }else if(coherenceVal == 1){
     coherenceIndicator->setStyleSheet("background-color: blue");
   }else{
     coherenceIndicator->setStyleSheet("background-color: green");
@@ -78,6 +83,7 @@ void Session::updateCoherence(){
 }
 
 void Session::updateHrvGraph(){
+  if(!sessionRunning)return;
   struct timeval now;
   gettimeofday(&now, NULL);
   long microseconds = (now.tv_sec * 1000000 + now.tv_usec) - (startTimestamp.tv_sec * 1000000 + startTimestamp.tv_usec);
@@ -91,6 +97,7 @@ void Session::updateHrvGraph(){
 }
 
 void Session::updateBreathMonitor(){
+  if(!sessionRunning)return;
   struct timeval now;
   gettimeofday(&now, NULL);
   long microseconds = (now.tv_sec * 1000000 + now.tv_usec) - (breathTimestamp.tv_sec * 1000000 + breathTimestamp.tv_usec);
@@ -105,14 +112,17 @@ void Session::updateBreathMonitor(){
 }
 
 void Session::updateText(){
+  coherenceVal = hrv->getCoherence();
+  achievementVal = hrv->getAchievement();
   lengthValWidget->setText(QString::number(hrv->getTime(), 'f', 2));
+  coherenceValWidget->setText(QString::number(coherenceVal,'f',1));
+  achievementValWidget->setText(QString::number(achievementVal,'f',1));
 }
 
 void Session::stopSession(){
   if(!sessionRunning) return;
   sessionRunning = false;
   lengthValWidget->setText("0:0.00");
-  coherenceIndicator->setStyleSheet("background-color: grey");
   heartBeat->setStyleSheet("border-radius: 15px; background-color: (238,238,238);");
 
   float *dataArr;
@@ -126,7 +136,7 @@ void Session::stopSession(){
 }
 
 void Session::startSession(){
-  if(sessionRunning)  return;
+  if(sessionRunning || !sensorConnected)  return;
   sessionRunning = true;
   gettimeofday(&heartBeatTimestamp, NULL);
   gettimeofday(&breathTimestamp, NULL);
@@ -164,4 +174,9 @@ void  Session::render(){
   hrvFrame->show();
   breathFrame->show();
   coherenceIndicator->show();
+}
+
+void Session::changeConnection(){
+  sensorConnected = !sensorConnected;
+  if(!sensorConnected && sessionRunning) stopSession();
 }

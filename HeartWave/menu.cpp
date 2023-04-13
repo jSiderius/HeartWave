@@ -1,6 +1,6 @@
 #include "menu.h"
 
-Menu::Menu(std::string n, Page **arr, int arrSize, QWidget *parent) : Page(n, parent), numPages(arrSize), subPages(arr)
+Menu::Menu(std::string n, Page **arr, int arrSize, bool d, QWidget *parent) : Page(n, parent), numPages(arrSize), deletable(d), subPages(arr)
 {
   buttonSelected = 0;
   pageSelected = 0;
@@ -67,4 +67,25 @@ void Menu::writeToFile(){
   for(int i = 0; i < numPages; i++){
     subPages[i]->writeToFile();
   }
+}
+
+void Menu::remove(){
+  if(!deletable)return;
+
+  delete subPages[pageSelected];
+  subPages[pageSelected];
+  for(int i = pageSelected; i < numPages; i++){
+    subPages[i] = subPages[i+1];
+  }
+  numPages--;
+  render();
+}
+
+void Menu::removeAll(){
+  if(!deletable)return;
+  for(int i = 0; i < numPages; i++){
+    delete subPages[i];
+  }
+  numPages=0;
+  render();
 }

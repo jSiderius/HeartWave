@@ -8,9 +8,11 @@ class Menu : public Page
 {
 
   public:
-      Menu(std::string, Page**, int, QWidget*);
+      Menu(std::string, Page**, int, bool, QWidget*);
       void add(Page *);
       void writeToFile();
+      void remove();
+      void removeAll();
 
 
   private:
@@ -19,7 +21,6 @@ class Menu : public Page
     void  render();
     void  select(direction dir);
 
-
     Page **subPages;
 
     QPushButton *buttons[NUM_BUTTONS];
@@ -27,6 +28,8 @@ class Menu : public Page
     int numPages;
     int pageSelected;
     int buttonSelected;
+
+    bool deletable;
 
 
 
