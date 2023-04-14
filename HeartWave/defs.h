@@ -2,6 +2,7 @@
 #define DEFS_H
 
 #include <QFile>
+#include <cmath>
 #include <iomanip>
 #include <string>
 #include <QDebug>
@@ -24,8 +25,6 @@
 #include <QPushButton>
 #include <QPaintEvent>
 #include <QPainterPath>
-#include <eigen3/Eigen/Core>
-#include <eigen3/Eigen/Dense>
 
 #define MAX_ARR 256
 #define NUM_BUTTONS 4
