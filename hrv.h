@@ -5,6 +5,7 @@
 
 #define OFFSET_RIGHT 45.0
 #define SCROLL_SIZE 100
+#define DEFAULT_MODE 0
 
 class Hrv : public QWidget
 {
@@ -12,6 +13,7 @@ class Hrv : public QWidget
 
   public:
       Hrv(float = 0, QWidget *parent = nullptr);
+      void addData(float, int);
       void addData(float);
       void reset(float **, int &, float **, int &); //ULTIMATELY SHOULD RETURN SESSION DATA
       void shiftLeft();
@@ -23,7 +25,7 @@ class Hrv : public QWidget
   protected:
     void paintEvent(QPaintEvent*);
   private:
-    float calculateCoherence();
+    float calculateCoherence(int);
 
     float *dataArr;
     float *cohArr;
@@ -33,6 +35,7 @@ class Hrv : public QWidget
     float maxVal;
 
     int offset = 0;
+
 };
 
 #endif // HRV_H

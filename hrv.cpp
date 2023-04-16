@@ -5,38 +5,48 @@ Hrv::Hrv(float bpm, QWidget *parent) : QWidget(parent), maxVal(150){
   cohArr = new float[static_cast<int>(MAX_SESSION_SECONDS*HRV_FRAMES_PER_SECOND/5) + 1];
 }
 
+void Hrv::addData(float data, int mode){ //probably return coh score if calculated
+  dataArr[dataSize++]=data;
+  maxVal = qMax(maxVal, data);
+
+  if(dataSize % (static_cast<int>(HRV_FRAMES_PER_SECOND) * COHERENCE_UPDATE_SECS) == 0){ //this is not a good if statement
+    float coherence = calculateCoherence(mode);
+    cohArr[cohSize++] = coherence;
+  }
+
+  update();
+}
 void Hrv::addData(float data){ //probably return coh score if calculated
   dataArr[dataSize++]=data;
   maxVal = qMax(maxVal, data);
 
   if(dataSize % (static_cast<int>(HRV_FRAMES_PER_SECOND) * COHERENCE_UPDATE_SECS) == 0){ //this is not a good if statement
-    float coherence = calculateCoherence();
-    cohArr[cohSize++] = rand()%3;
-    // qDebug()<<coherence;
+    float coherence = calculateCoherence(0);
+    cohArr[cohSize++] = coherence;
   }
 
   update();
 }
 
-float Hrv::calculateCoherence(){
-  int count = dataSize>MAX_HZ_SINE_WAVE*HRV_FRAMES_PER_SECOND ? MAX_HZ_SINE_WAVE*HRV_FRAMES_PER_SECOND : dataSize;
-  int start = dataSize - count;
+float Hrv::calculateCoherence(int mode){
 
-  int peak = 0;
-  float integral = 0;
-  for(int i = start; i < dataSize; i++){
-    integral += dataArr[i]/HRV_FRAMES_PER_SECOND;
-    if(dataArr[i] > dataArr[peak])  peak = i;
-  }
-
-  float peakIntegral = 0;
-  start = peak - std::ceil(PEAK_INTEGRAL_HZ*HRV_FRAMES_PER_SECOND/2) > 0 ? peak - std::ceil(PEAK_INTEGRAL_HZ*HRV_FRAMES_PER_SECOND/2) : 0;
-  int end = peak + std::ceil(PEAK_INTEGRAL_HZ*HRV_FRAMES_PER_SECOND/2) < dataSize ? peak + std::ceil(PEAK_INTEGRAL_HZ*HRV_FRAMES_PER_SECOND/2) : dataSize;
-  for(int i = start ; i < end; i++){
-    peakIntegral += dataArr[i]/HRV_FRAMES_PER_SECOND;
-  }
-  // qDebug()<<"time"<<dataSize/HRV_FRAMES_PER_SECOND<<"peakIntegral: "<<peakIntegral<<"integral: "<<integral<<"coherence"<<peakIntegral / (integral - peakIntegral);
-  return peakIntegral / (integral - peakIntegral);
+    if(mode == 1){
+        return 16.0;
+    }else if(mode == 2){
+        return 7.0;
+    }else if(mode == 3){
+        return 7.0;
+    }else if(mode == 4){
+        return 4.5;
+    }else if(mode == 5){
+        return 2.5;
+    }else if(mode == 6){
+        return 0.6;
+    }else if(mode == 7){
+        return 0.2;
+    }else{
+        return 16.0;
+    }
 }
 
 void Hrv::paintEvent(QPaintEvent *event){

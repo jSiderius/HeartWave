@@ -88,7 +88,7 @@ void  SessionData::select(direction dir){
 void SessionData::writeToFile(){
   char buff[200];
   getcwd(buff, 200);
-  QFile file(QString::fromStdString(buff)+"/../HeartWave/data.txt");
+  QFile file(QString::fromStdString(buff)+"/data.txt");
   file.open(QIODevice::WriteOnly | QIODevice::Append | QIODevice::Text);
 
   qDebug()<<dataSize;

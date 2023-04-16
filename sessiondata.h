@@ -3,7 +3,7 @@
 
 #include "defs.h"
 #include "page.h"
-#include "hrv.h";
+#include "hrv.h"
 #include "breathmonitor.h"
 
 class SessionData : public Page

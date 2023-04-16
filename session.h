@@ -4,7 +4,7 @@
 #include "defs.h"
 #include "page.h"
 #include "menu.h"
-#include "hrv.h";
+#include "hrv.h"
 #include "breathmonitor.h"
 #include "sessiondata.h"
 
@@ -16,12 +16,11 @@ class Session : public QObject, public Page
 {
   Q_OBJECT
   public:
-      Session(std::string, Menu*, int&, QWidget*);
+      Session(std::string, Menu*, int&, QWidget*, int&, int&);
       ~Session(){}
       Page* click();
       void  derender();
       void  render();
-      void  select(direction dir){}
       void  update();
 
       void stopSession();
@@ -29,7 +28,6 @@ class Session : public QObject, public Page
 
       void updateHeartBeat();
       void updateCoherence();
-      // void updateHrvGraph();
       void updateBreathMonitor();
       void updateText();
 
@@ -37,13 +35,19 @@ class Session : public QObject, public Page
     QWidget *parent;
     Menu *sessionDataMenu;
     int &breathingRate;
+    int &mode;
+    int &challLevel;
+    int x = 15;
+    int y = 70;
+    int changed = 0;
 
     float achievementVal = 11;
     float lengthVal = 11;
-    float coherenceVal = 6;
+    float coherenceVal = 0.0;
+    float prevCoherence = 0.0;
 
     void initGUI(QWidget*);
-    void coherenceChangeAudio();
+    void coherenceChangeAlert();
 
     QPushButton *coherenceIndicator;
 
@@ -53,11 +57,13 @@ class Session : public QObject, public Page
     QLabel *coherenceValWidget;
     QLabel *lengthValWidget;
     QLabel *achievementValWidget;
+    QLabel *coherenceChange;
     QPushButton *heartBeat;
     QFrame *hrvFrame;
     Hrv *hrv;
     QFrame *breathFrame;
     BreathMonitor *breathMonitor;
+    QTimer *cohChange;
 
     float bpm = 60;
     float sinCurr = 0;
@@ -73,6 +79,7 @@ class Session : public QObject, public Page
     bool sessionRunning;
     bool sensorConnected = false;
     int numSessions = 0;
+    float getBPM(float);
 
     private slots:
       void updateHrvGraph();

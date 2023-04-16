@@ -77,18 +77,40 @@ void MainWindow::initPages(){
   Page **settings = new Page*[MAX_ARR];
 
   int *intArr = new int[30];
+  int *typeArr = new int[7];
   QString*stringArr = new QString[30];
+  QString*typeNameArr = new QString[7];
+  for(int i = 1; i<8; i++){
+      //typeNameArr[i-1] = QString::number(i);
+      typeArr[i-1] = i;
+  }
+  typeNameArr[0] = "Normal, High Coherence";
+  typeNameArr[1] = "High Amplitude, High Coherence";
+  typeNameArr[2] = "Low Amplitude, High Coherence";
+  typeNameArr[3] = "High-Mid Coherence";
+  typeNameArr[4] = "Mid Coherence";
+  typeNameArr[5] = "Low-Mid Coherence";
+  typeNameArr[6] = "Low Coherence";
   for(int i = 1; i < 31; i++){
     intArr[i-1] = i;
     stringArr[i-1] = QString::number(i);
-  }settings[0] = new Setting<int>("Breath Pacer Setting", breathingRateHolder, intArr, 60, stringArr, ui->menuFrame);
+  }
+  QString*challNameArr = new QString[4];
+  int *challArr = new int[4];
+  for(int i=1; i<5; i++){
+      challArr[i-1] = i;
+      challNameArr[i-1] = QString::number(i);
+  }
+  settings[0] = new Setting<int>("Breath Pacer Setting", breathingRateHolder, intArr, 30, stringArr, ui->menuFrame);
+  settings[1] = new Setting<int>("HRV Mode", hrvTypeHolder, typeArr, 7, typeNameArr, ui->menuFrame);
+  settings[2] = new Setting<int>("Challenge Level", challengeHolder, challArr, 4, challNameArr, ui->menuFrame);
 
   Page **arr1 = new Page*[MAX_ARR];
   sessionDataMenu = new Menu("Log/History", arr1, 0, true, ui->menuFrame);
-  mainSession = new Session("Start New Session", sessionDataMenu, breathingRateHolder, ui->menuFrame);
+  mainSession = new Session("Session", sessionDataMenu, breathingRateHolder, ui->menuFrame, hrvTypeHolder, challengeHolder);
 
   arr[0] = mainSession;
-  arr[1] = new Menu("Settings", settings, 1, false, ui->menuFrame);
+  arr[1] = new Menu("Settings", settings, 3, false, ui->menuFrame);
   arr[2] = sessionDataMenu;
   currPage = new Menu("Main Menu", arr, 3, false, ui->menuFrame);
 
@@ -194,7 +216,7 @@ void MainWindow::charge(){
 void MainWindow::writeToFile(){
   char buff[200];
   getcwd(buff, 200);
-  QFile file(QString::fromStdString(buff)+"/../HeartWave/data.txt");
+  QFile file(QString::fromStdString(buff)+"/data.txt");
   file.open(QIODevice::WriteOnly);
   file.close();
   sessionDataMenu->writeToFile();
@@ -203,7 +225,7 @@ void MainWindow::writeToFile(){
 void MainWindow::readInSessionData(Menu *sessionMenu){
   char buff[200];
   getcwd(buff, 200);
-  QFile file(QString::fromStdString(buff)+"/../HeartWave/data.txt");
+  QFile file(QString::fromStdString(buff)+"/data.txt");
   file.open(QIODevice::ReadOnly | QIODevice::Text);
 
   QByteArray fileData = file.readAll();

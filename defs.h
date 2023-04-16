@@ -25,6 +25,7 @@
 #include <QPushButton>
 #include <QPaintEvent>
 #include <QPainterPath>
+#include <algorithm>
 
 #define MAX_ARR 256
 #define NUM_BUTTONS 4

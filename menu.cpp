@@ -52,9 +52,12 @@ void Menu::derender(){
 }
 
 Page* Menu::click(){
+    //qDebug()<<numPages;
   if(numPages == 0) return this;
   derender();
+  //qDebug()<<pageSelected;
   subPages[pageSelected]->render();
+  //qDebug()<<pageSelected;
   return subPages[pageSelected];
 }
 
@@ -70,7 +73,7 @@ void Menu::writeToFile(){
 }
 
 void Menu::remove(){
-  if(!deletable)return;
+  if(!deletable || numPages == 0)return;
 
   delete subPages[pageSelected];
   subPages[pageSelected];
