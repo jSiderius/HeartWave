@@ -1,0 +1,14 @@
+<RCC>
+    <qresource prefix="/">
+        <file>images/upArrow.png</file>
+        <file>images/downArrow.png</file>
+        <file>images/leftArrow.png</file>
+        <file>images/rightArrow.png</file>
+        <file>images/powerButton.png</file>
+        <file>images/backButton.png</file>
+        <file>images/menuButton.png</file>
+        <file>images/delete.png</file>
+        <file>images/deleteAll.png</file>
+    </qresource>
+    <qresource prefix="/new/prefix1"/>
+</RCC>
