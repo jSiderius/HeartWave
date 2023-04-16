@@ -89,9 +89,8 @@ void SessionData::writeToFile(){
   char buff[200];
   getcwd(buff, 200);
   QFile file(QString::fromStdString(buff)+"/data.txt");
-  file.open(QIODevice::WriteOnly | QIODevice::Append | QIODevice::Text);
+  file.open(QIODevice::WriteOnly | QIODevice::Append | QIODevice::Text | QIODevice::Truncate);
 
-  qDebug()<<dataSize;
   QTextStream out(&file);
   for(int i = 0;  i < dataSize; i++){
     out << dataArr[i]<<",";

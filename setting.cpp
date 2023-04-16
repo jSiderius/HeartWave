@@ -17,7 +17,6 @@ Setting<T>::Setting(std::string n,  T& val, T*o, int ns, QString *s, QWidget* pa
 template <typename T>
 Page* Setting<T>::click(){
   value = options[settingSelected];
-  qDebug()<<value;
   return this;
 }
 

@@ -1,7 +1,6 @@
 #include "session.h"
 
 Session::Session(std::string n, Menu *m, int &br, QWidget* parent, int &type, int &chall) : Page(n, parent), sessionDataMenu(m), sessionRunning(false), breathingRate(br), parent(parent), mode(type), challLevel(chall) {
-    //qDebug()<<"Chall"<<challLevel;
     initGUI(parent);
 }
 

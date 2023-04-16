@@ -217,7 +217,7 @@ void MainWindow::writeToFile(){
   char buff[200];
   getcwd(buff, 200);
   QFile file(QString::fromStdString(buff)+"/data.txt");
-  file.open(QIODevice::WriteOnly);
+  file.open(QIODevice::WriteOnly | QIODevice::Truncate);
   file.close();
   sessionDataMenu->writeToFile();
 }
@@ -251,8 +251,6 @@ void MainWindow::readInSessionData(Menu *sessionMenu){
       cohArr[i++] = val.toFloat();
     }
 
-    qDebug()<<cohStrings;
-    qDebug()<<"\n\n";
     sessionMenu->add(new SessionData("Session Data" + std::to_string(++j), dataStrings.count()-3, dataArr, cohStrings.count()-1, cohArr, ui->menuFrame));
   }
 }

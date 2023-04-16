@@ -52,12 +52,9 @@ void Menu::derender(){
 }
 
 Page* Menu::click(){
-    //qDebug()<<numPages;
   if(numPages == 0) return this;
   derender();
-  //qDebug()<<pageSelected;
   subPages[pageSelected]->render();
-  //qDebug()<<pageSelected;
   return subPages[pageSelected];
 }
 
