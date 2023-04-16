@@ -95,8 +95,6 @@ void MainWindow::initPages(){
     intArr[i-1] = i;
     stringArr[i-1] = QString::number(i);
   }
-  int hrvType = 7;
-  int challenge = 1;
   QString*challNameArr = new QString[4];
   int *challArr = new int[4];
   for(int i=1; i<5; i++){
@@ -104,12 +102,12 @@ void MainWindow::initPages(){
       challNameArr[i-1] = QString::number(i);
   }
   settings[0] = new Setting<int>("Breath Pacer Setting", breathingRateHolder, intArr, 30, stringArr, ui->menuFrame);
-  settings[1] = new Setting<int>("HRV Mode", hrvType, typeArr, 7, typeNameArr, ui->menuFrame);
-  settings[2] = new Setting<int>("Challenge Level", challenge, challArr, 4, challNameArr, ui->menuFrame);
+  settings[1] = new Setting<int>("HRV Mode", hrvTypeHolder, typeArr, 7, typeNameArr, ui->menuFrame);
+  settings[2] = new Setting<int>("Challenge Level", challengeHolder, challArr, 4, challNameArr, ui->menuFrame);
 
   Page **arr1 = new Page*[MAX_ARR];
   sessionDataMenu = new Menu("Log/History", arr1, 0, true, ui->menuFrame);
-  mainSession = new Session("Start New Session", sessionDataMenu, breathingRateHolder, ui->menuFrame, hrvType, challenge);
+  mainSession = new Session("Session", sessionDataMenu, breathingRateHolder, ui->menuFrame, hrvTypeHolder, challengeHolder);
 
   arr[0] = mainSession;
   arr[1] = new Menu("Settings", settings, 3, false, ui->menuFrame);
@@ -218,7 +216,7 @@ void MainWindow::charge(){
 void MainWindow::writeToFile(){
   char buff[200];
   getcwd(buff, 200);
-  QFile file(QString::fromStdString(buff)+"/../HeartWave/data.txt");
+  QFile file(QString::fromStdString(buff)+"/data.txt");
   file.open(QIODevice::WriteOnly);
   file.close();
   sessionDataMenu->writeToFile();
@@ -227,7 +225,7 @@ void MainWindow::writeToFile(){
 void MainWindow::readInSessionData(Menu *sessionMenu){
   char buff[200];
   getcwd(buff, 200);
-  QFile file(QString::fromStdString(buff)+"/../HeartWave/data.txt");
+  QFile file(QString::fromStdString(buff)+"/data.txt");
   file.open(QIODevice::ReadOnly | QIODevice::Text);
 
   QByteArray fileData = file.readAll();

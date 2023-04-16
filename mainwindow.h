@@ -24,6 +24,8 @@ public:
 
 private:
     int breathingRateHolder = 10;
+    int challengeHolder = 1;
+    int hrvTypeHolder = 7;
     Ui::MainWindow *ui;
     int curr = 0;
 

@@ -73,7 +73,7 @@ void Menu::writeToFile(){
 }
 
 void Menu::remove(){
-  if(!deletable)return;
+  if(!deletable || numPages == 0)return;
 
   delete subPages[pageSelected];
   subPages[pageSelected];
