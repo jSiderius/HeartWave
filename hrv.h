@@ -15,7 +15,7 @@ class Hrv : public QWidget
       Hrv(float = 0, QWidget *parent = nullptr);
       void addData(float, int);
       void addData(float);
-      void reset(float **, int &, float **, int &); //ULTIMATELY SHOULD RETURN SESSION DATA
+      void reset(float **, int &, float **, int &, float &); //ULTIMATELY SHOULD RETURN SESSION DATA
       void shiftLeft();
       void shiftRight();
       float getTime();
@@ -29,6 +29,8 @@ class Hrv : public QWidget
 
     float *dataArr;
     float *cohArr;
+    float coherence = 0;
+    float achievement = 0;
     int dataSize = 0;
     int cohSize = 0;
 

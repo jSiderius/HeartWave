@@ -1,6 +1,6 @@
 #include "sessiondata.h"
 
-SessionData::SessionData(std::string name, int dSize, float *data, int cSize, float *coh, QWidget *parent) : Page(name, parent), dataArr(data), dataSize(dSize), cohArr(coh), cohSize(cSize) {
+SessionData::SessionData(std::string name, int dSize, float *data, int cSize, float *coh, float achievement, QWidget *parent) : Page(name, parent), dataArr(data), dataSize(dSize), cohArr(coh), cohSize(cSize), achievement(achievement) {
 
   hrvFrame = new QFrame(parent);
   hrvFrame->setGeometry(45.5, 80, 360, 100);
@@ -16,10 +16,9 @@ SessionData::SessionData(std::string name, int dSize, float *data, int cSize, fl
   float low, med, high, sum;
   low = med = high = sum = 0.0;
   for(int i = 0.0; i < cohSize; i++){
-    if(cohArr[i] == 0) low++;
-    if(cohArr[i] == 1) med++;
-    if(cohArr[i] == 2) high++;
-    sum+=cohArr[i];
+    if(cohArr[i] == 0){ low++; }
+    else if(cohArr[i] == 1){ med++; }
+    else{ high++; }
   }
   lowButton = new QPushButton(QString::number(low/cohSize * 100, 'f', 2) + "%", parent);
   medButton = new QPushButton(QString::number(med/cohSize * 100, 'f', 2) + "%", parent);
@@ -41,7 +40,7 @@ SessionData::SessionData(std::string name, int dSize, float *data, int cSize, fl
   achievementLabel = new QLabel("Achievement Score", parent);
   lengthLabel = new QLabel("Length of Session", parent);
   coherenceVal = new QLabel(QString::number(sum/cohSize,'f',2), parent);
-  achievementVal = new QLabel(QString::number(sum,'f',2), parent);
+  achievementVal = new QLabel(QString::number(achievement,'f',2), parent);
   lengthVal = new QLabel(QString::number(dataSize/HRV_FRAMES_PER_SECOND,'f',2), parent);
 
   coherenceLabel->    setGeometry(45.5, 40, 150, 20);
@@ -89,7 +88,7 @@ void SessionData::writeToFile(){
   char buff[200];
   getcwd(buff, 200);
   QFile file(QString::fromStdString(buff)+"/data.txt");
-  file.open(QIODevice::WriteOnly | QIODevice::Append | QIODevice::Text | QIODevice::Truncate);
+  file.open(QIODevice::WriteOnly | QIODevice::Append | QIODevice::Text);
 
   QTextStream out(&file);
   for(int i = 0;  i < dataSize; i++){
@@ -97,6 +96,6 @@ void SessionData::writeToFile(){
   }out<<"&";
   for(int i = 0;  i < cohSize; i++){
     out <<cohArr[i]<<",";
-  }out<<"$";
+  }out<<"&"<<achievement<<"$";
   file.close();
 }

@@ -9,7 +9,7 @@
 class SessionData : public Page
 {
   public:
-      SessionData(std::string, int, float*, int, float*, QWidget*);
+      SessionData(std::string, int, float*, int, float*, float, QWidget*);
       Page* click(){  return this; }
       void  derender();
       void  render();
@@ -22,6 +22,7 @@ class SessionData : public Page
       int dataSize;
       float *cohArr;
       int cohSize;
+      float achievement;
 
       QFrame *hrvFrame;
       Hrv *hrv;

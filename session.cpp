@@ -149,8 +149,9 @@ void Session::stopSession(){
   float *dataArr;
   float *cohArr;
   int dataSize, cohSize;
-  hrv->reset(&dataArr, dataSize, &cohArr, cohSize);
-  SessionData *sd = new SessionData("Current Session Data"+std::to_string(++numSessions), dataSize, dataArr, cohSize, cohArr, parent);
+  float achievement;
+  hrv->reset(&dataArr, dataSize, &cohArr, cohSize, achievement);
+  SessionData *sd = new SessionData("Current Session Data"+std::to_string(++numSessions), dataSize, dataArr, cohSize, cohArr, achievement, parent);
   hrvUpdateTicks = 0;
   sessionDataMenu->add(sd);
   breathMonitor->reset();

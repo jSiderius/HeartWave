@@ -234,7 +234,7 @@ void MainWindow::readInSessionData(Menu *sessionMenu){
   int j = 0;
   foreach(QString session, sessions){
     QStringList arrayStrings = QString(session).split('&');
-    if(arrayStrings.count()!=2)continue;
+    if(arrayStrings.count()!=3)continue;
 
     QStringList dataStrings = QString(arrayStrings[0]).split(',');
     QStringList cohStrings = QString(arrayStrings[1]).split(',');
@@ -251,7 +251,7 @@ void MainWindow::readInSessionData(Menu *sessionMenu){
       cohArr[i++] = val.toFloat();
     }
 
-    sessionMenu->add(new SessionData("Session Data" + std::to_string(++j), dataStrings.count()-3, dataArr, cohStrings.count()-1, cohArr, ui->menuFrame));
+    sessionMenu->add(new SessionData("Session Data" + std::to_string(++j), dataStrings.count()-3, dataArr, cohStrings.count()-1, cohArr, arrayStrings[2].toFloat(), ui->menuFrame));
   }
 }
 

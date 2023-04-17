@@ -12,6 +12,7 @@ void Hrv::addData(float data, int mode){ //probably return coh score if calculat
   if(dataSize % (static_cast<int>(HRV_FRAMES_PER_SECOND) * COHERENCE_UPDATE_SECS) == 0){ //this is not a good if statement
     float coherence = calculateCoherence(mode);
     cohArr[cohSize++] = coherence;
+    achievement += coherence;
   }
 
   update();
@@ -21,8 +22,8 @@ void Hrv::addData(float data){ //probably return coh score if calculated
   maxVal = qMax(maxVal, data);
 
   if(dataSize % (static_cast<int>(HRV_FRAMES_PER_SECOND) * COHERENCE_UPDATE_SECS) == 0){ //this is not a good if statement
-    float coherence = calculateCoherence(0);
-    cohArr[cohSize++] = coherence;
+    float coh = calculateCoherence(0);
+    cohArr[cohSize++] = coh;
   }
 
   update();
@@ -31,21 +32,37 @@ void Hrv::addData(float data){ //probably return coh score if calculated
 float Hrv::calculateCoherence(int mode){
 
     if(mode == 1){
-        return 16.0;
+        coherence = 16.0;
+        achievement+=coherence;
+        return 2;
     }else if(mode == 2){
-        return 7.0;
+        coherence = 7.0;
+        achievement+=coherence;
+        return 2;
     }else if(mode == 3){
-        return 7.0;
+        coherence = 7.0;
+        achievement+=coherence;
+        return 2;
     }else if(mode == 4){
-        return 4.5;
+        coherence = 4.5;
+        achievement+=coherence;
+        return 1;
     }else if(mode == 5){
-        return 2.5;
+        coherence = 2.5;
+        achievement+=coherence;
+        return 1;
     }else if(mode == 6){
-        return 0.6;
+        coherence = 0.6;
+        achievement+=coherence;
+        return 0;
     }else if(mode == 7){
-        return 0.2;
+        coherence = 0.2;
+        achievement+=coherence;
+        return 0;
     }else{
-        return 16.0;
+        coherence = 16.0;
+        achievement+=coherence;
+        return 0;
     }
 }
 
@@ -85,12 +102,15 @@ void Hrv::paintEvent(QPaintEvent *event){
 
 }
 
-void Hrv::reset(float **getDataArr, int &getDataSize, float **getCohArr, int &getCohSize){
+void Hrv::reset(float **getDataArr, int &getDataSize, float **getCohArr, int &getCohSize, float &achieve){
   *getDataArr = dataArr;
   *getCohArr = cohArr;
   getDataSize = dataSize;
   getCohSize = cohSize;
+  achieve = achievement;
 
+  achievement = 0;
+  coherence = 0;
   dataSize = 0;
   offset = 0;
   update();
@@ -122,12 +142,9 @@ float Hrv::getTime(){
 }
 
 float Hrv::getCoherence(){
-  return cohArr[cohSize-1];
+  return coherence;
 }
 
 float Hrv::getAchievement(){
-  float achievement = 0;
-  for(int i = 0; i < cohSize; i++){
-    achievement+=cohArr[i];
-  }return achievement;
+  return achievement;
 }
