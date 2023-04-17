@@ -8,6 +8,10 @@ Kendrick Shepherd:
   - Traceability matrix  
 
 Shak Patel:
+  -Use Cases and Use Case Diagram
+  -UML Class Diagram
+  -Sequence Diagram
+  -Textual explanations
 
 Josh Siderius:
   - page gui/class structure
