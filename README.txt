@@ -1,12 +1,13 @@
 Team Members and contributions:
 
 Kendrick Shepherd:
+  - Coherence calculation
+  - HRV input modes
+  - Coherence change alert
+  - Challenge levels
+  - Traceability matrix  
 
 Shak Patel:
-  -Use Cases and Use Case Diagram
-  -UML Class Diagram
-  -Sequence Diagram
-  -Textual explanations
 
 Josh Siderius:
   - page gui/class structure
